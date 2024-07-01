@@ -5,13 +5,15 @@ import { Request, Response, NextFunction } from 'express';
 
 const createUserValidation: ValidationSchema = {
   body: Joi.object().keys({
-    first_name: Joi.string().required(),
-    last_name: Joi.string().required(),
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
     role: Joi.string().required(),
     email: Joi.string().email().required(),
-    password: Joi.string().required(),
-    language: Joi.string().required(),
-    comment: Joi.string().allow(null, ''),
+    jobRef: Joi.string().required(),
+    // jobTitle: Joi.string().allow(null, ''),
+    jobTitle: Joi.string().required(),
+    phoneNumber: Joi.string().required(),
+    gender: Joi.string().required(),
   }),
 };
 

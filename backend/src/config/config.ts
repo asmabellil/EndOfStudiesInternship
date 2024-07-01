@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { readPackage } from '@core/utils/package';
 
-require('dotenv').config({ path: '.env.local' });
+require('dotenv').config({ path: '.env' });
 
 // All env variables used by the app should be defined in this file.
 
@@ -44,7 +44,7 @@ export default {
   host: envVars.DB_HOST,
   username: envVars.DB_USER,
   password: envVars.DB_PASSWORD,
-  database: envVars.DB_NAME || 'surtech',
+  database: envVars.DB_NAME || 'internship',
   databasePort: envVars.DB_PORT || 3306,
   dialect: envVars.DB_Dialect,
   jwtSecret: envVars.JWT_SECRET,

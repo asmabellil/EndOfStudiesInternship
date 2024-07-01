@@ -11,13 +11,21 @@ export default class User extends Model {
 
   password: string;
 
-  companyId: number;
+  jobRef: string;
 
-  resetCode: number;
+  jobTitle: string;
 
-  resetCodeExpiry: Date;
+  firstName: Date;
 
-  role : string;
+  lastName : string;
+
+  email: string;
+
+  phoneNumber: string;
+
+  gender: string;
+
+  role: string;
 
   public static associations: {
   };
@@ -31,31 +39,22 @@ export const initUser = (sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      first_name: DataTypes.STRING,
-      last_name: DataTypes.STRING,
+      firstName: DataTypes.STRING,
+      lastName: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
         unique: true,
       },
       password: DataTypes.STRING,
-      language: DataTypes.STRING,
-      comment: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
       role: DataTypes.STRING,
       resetToken: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      resetCode: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      resetCodeExpiry: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
+      jobRef: DataTypes.STRING,
+      jobTitle: DataTypes.STRING,
+      phoneNumber: DataTypes.STRING,
+      gender: DataTypes.STRING,
       // companyId: {
       //   type: DataTypes.INTEGER,
       //   allowNull: true,

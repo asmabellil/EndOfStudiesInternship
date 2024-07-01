@@ -1,0 +1,22 @@
+oracle database express edition:
+1. install oracle database express edition (zip)
+2. Unzipp the folder 
+3. run setup.exe
+
+
+SQL developer:
+1. install oracle sql developer
+2. unzipp
+3. run sqldeveloper.exe
+
+
+after that open cmd: 
+1. lsnrctl start
+2. lsnrctl status
+3. configure a connection with oracle sql developer to the server (service name: XEPDB1)
+
+
+
+CREATE USER internship IDENTIFIED BY your_password;
+GRANT CONNECT, RESOURCE TO internship;
+ALTER USER internship QUOTA UNLIMITED ON USERS;
