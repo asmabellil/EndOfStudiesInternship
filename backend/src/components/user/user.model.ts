@@ -11,7 +11,7 @@ export default class User extends Model {
 
   password: string;
 
-  jobRef: string;
+  userRef: string;
 
   jobTitle: string;
 
@@ -51,7 +51,7 @@ export const initUser = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      jobRef: DataTypes.STRING,
+      userRef: DataTypes.STRING,
       jobTitle: DataTypes.STRING,
       phoneNumber: DataTypes.STRING,
       gender: DataTypes.STRING,

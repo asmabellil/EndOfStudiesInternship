@@ -2,7 +2,7 @@ export interface IUser {
   id: number;
   resetToken: string;
   password: string;
-  jobRef: string;
+  userRef: string;
   jobTitle: string;
   firstName: Date;
   lastName : string;

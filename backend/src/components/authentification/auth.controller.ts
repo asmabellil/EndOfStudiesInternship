@@ -3,10 +3,8 @@ import httpStatus from 'http-status';
 import {
   authentification,
   resetPassword,
-  resetPasswordMobile,
   verifyResetPasswordLink,
   updatePassword,
-  verifyResetCodeMobile
 } from '@components/authentification/auth.service';
 import jwt from 'jsonwebtoken';
 import consts from '@config/consts';
@@ -31,17 +29,7 @@ const login = async (req: Request, res: Response) => {
 const resetPasswordUser = async (req, res) => {
   try {
     const { email } = req.body;
-    const result = await resetPassword(email);
-    res.status(result.status).json({ message: result.message });
-  } catch (error) {
-    res.status(500).json({ error: "Une erreur s'est produite" });
-  }
-};
-
-const resetPasswordUserMobile = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const result = await resetPasswordMobile(email);
+    const result = await resetPassword(email, consts.MAIN_COLOR, consts.SECOND_COLOR);
     res.status(result.status).json({ message: result.message });
   } catch (error) {
     res.status(500).json({ error: "Une erreur s'est produite" });
@@ -58,21 +46,13 @@ const handlePasswordResetLink = async (req, res) => {
   }
 };
 
-const handlePasswordResetCode = async (req, res) => {
-  try {
-    const result = await verifyResetCodeMobile(req.body.email, req.body.code);
-    return res.status(result.status).json({ message: result.message });
-  } catch (error) {
-    res.status(500).json({ error: "Une erreur s'est produite" });
-  }
-};
-
 const changePassword = async (req: Request, res: Response) => {
   try {
     const { password, token } = req.body;
     const secretKey = consts.JWT_SECRET;
 
     const decoded = jwt.verify(token, secretKey);
+
     const result = await updatePassword(password, decoded.userId);
     res.status(result.status);
     res.send({ message: result.message });
@@ -82,4 +62,4 @@ const changePassword = async (req: Request, res: Response) => {
   }
 };
 
-export { login, resetPasswordUser, handlePasswordResetLink, changePassword, resetPasswordUserMobile, handlePasswordResetCode };
+export { login, resetPasswordUser, handlePasswordResetLink, changePassword };

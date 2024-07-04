@@ -9,6 +9,7 @@ import { sendMail } from '@config/mail';
 import AppError from '@core/utils/appError';
 import httpStatus from 'http-status';
 import crypto from 'crypto';
+import verifyPasswordComplexity from '@core/utils/passwordComplexity';
 
 // Login
 const authentification = async (email: string, password: string): Promise<string | null> => {
@@ -43,7 +44,7 @@ const generateResetToken = (id) => {
 };
 
 // Function to handle reset password request
-const resetPassword = async (email) => {
+const resetPassword = async (email, primaryColor, secondaryColor) => {
   try {
     const user = await UserModel.findOne({ where: { email } });
     if (!user) return { status: 400, message: "L'utilisateur n'existe pas" };
@@ -55,11 +56,17 @@ const resetPassword = async (email) => {
     (user as any).resetToken = token;
     await user.save();
 
-    const link = `${consts.FRONT_END_URL}/auth/lockscreen/${token}`;
+    const link = `${consts.FRONT_END_URL}lockscreen/${token}`;
     const mailOptions = {
       to: email,
       subject: 'Password Reset',
-      html: `<p>You have requested a password reset. Click <a href="${link}">here</a> to reset your password.</p>`,
+      html: `
+        <div style="font-family: Arial, sans-serif; color: ${primaryColor};">
+          <h1 style="color: ${primaryColor};">Password Reset Request</h1>
+          <p>You have requested a password reset. Click the button below to reset your password.</p>
+          <a href="${link}" style="background-color: ${secondaryColor}; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
+        </div>
+      `,
     };
     logger.debug(link);
     // Send email with password reset link
@@ -68,72 +75,6 @@ const resetPassword = async (email) => {
     return {
       status: 200,
       message: 'Lien de réinitialisation du mot de passe envoyé à votre adresse électronique',
-    };
-  } catch (error) {
-    throw new Error(error.message || "Une erreur s'est produite");
-  }
-};
-
-// Helper function to generate a secure random code
-const generateSecureCode = () => {
-  return crypto.randomBytes(3).toString('hex'); // Generates a 6-digit hexadecimal code
-};
-
-// Function to handle reset password request Mobile
-const resetPasswordMobile = async (email) => {
-  try {
-    const user = await UserModel.findOne({ where: { email } });
-    if (!user) return { status: 400, message: "L'utilisateur n'existe pas" };
-
-    // Generate a secure random code
-    const code = generateSecureCode();
-    // Store the code in the database with an expiration time
-    (user as any).resetCode = code;
-    (user as any).resetCodeExpiry = Date.now() + 3600000; // 1 hour expiry
-    await user.save();
-
-    const mailOptions = {
-      to: email,
-      subject: 'Password Reset Code',
-      // eslint-disable-next-line max-len
-      html: `<p>You have requested a password reset. Use the following code to reset your password: <strong>${code}</strong></p>`,
-    };
-    logger.debug(`Reset code for ${email}: ${code}`);
-    
-    // Send email with password reset code
-    await sendMail(mailOptions);
-
-    return {
-      status: 200,
-      message: 'Code de réinitialisation du mot de passe envoyé à votre adresse électronique',
-    };
-  } catch (error) {
-    throw new Error(error.message || "Une erreur s'est produite");
-  }
-};
-
-const verifyResetCodeMobile = async (email, code) => {
-  try {
-    const user = await UserModel.findOne({ where: { email } });
-    if (!user) return { status: 400, message: "L'utilisateur n'existe pas" };
-
-    // Check if the reset code and expiry date are valid
-    const { resetCode, resetCodeExpiry } = user.dataValues;
-    if (!resetCode || !resetCodeExpiry) {
-      return { status: 400, message: 'Aucun code de réinitialisation trouvé' };
-    }
-
-    if (resetCode !== code) {
-      return { status: 400, message: 'Code de réinitialisation incorrect' };
-    }
-
-    if (Date.now() > resetCodeExpiry) {
-      return { status: 400, message: 'Code de réinitialisation expiré' };
-    }
-
-    return {
-      status: 200,
-      message: 'Code de réinitialisation vérifié avec succès',
     };
   } catch (error) {
     throw new Error(error.message || "Une erreur s'est produite");
@@ -194,6 +135,10 @@ const verifyResetPasswordLink = async (token: string): Promise<VerifyResetPasswo
 
 const updatePassword = async (password: string, userId: any): Promise<any> => {
   try {
+    const passwordComplexity = verifyPasswordComplexity(password);
+    if (passwordComplexity) {
+      return { status: 400, message: passwordComplexity };
+    }
     const saltRounds = 10;
     // Hash the password asynchronously
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -213,4 +158,4 @@ const updatePassword = async (password: string, userId: any): Promise<any> => {
   }
 };
 
-export { authentification, verifyResetPasswordLink, resetPassword, updatePassword, resetPasswordMobile, verifyResetCodeMobile };
+export { authentification, verifyResetPasswordLink, resetPassword, updatePassword };

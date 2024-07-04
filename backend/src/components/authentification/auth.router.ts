@@ -14,18 +14,9 @@ app.post('/resetPassword', [validation(loginValidation.resetPasswordValidation)]
   authController.resetPasswordUser(req, res);
 });
 
-app.post('/resetPasswordMobile', [validation(loginValidation.resetPasswordValidation)], async (req, res) => {
-  authController.resetPasswordUserMobile(req, res);
-});
-
 // Route to handle password reset link
 app.get('/verifyLink', async (req, res) => {
   authController.handlePasswordResetLink(req, res);
-});
-
-// Route to handle password reset link
-app.post('/verifyCode', async (req, res) => {
-  authController.handlePasswordResetCode(req, res);
 });
 
 app.post('/updatePassword', [validation(loginValidation.changePasswordValidation)], async (req, res) => {

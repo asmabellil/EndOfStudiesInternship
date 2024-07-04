@@ -53,21 +53,6 @@ export async function sendMail(mail: MailOptions): Promise<any> {
   }
   // Create transporter
   const nodemailer: Transporter = await getTransporter();
-  // Send mail
-  /* const mailInfo = await nodemailer.sendMail({
-    ...payload,
-    timeout: 5000,
-  });
-
-  if (mailInfo) {
-    if (NODE_ENV !== 'production') {
-      logger.info(`Mail Preview URL is ${getTestMessageUrl(mailInfo)}`);
-    }
-
-    // Return mail response
-    return mailInfo;
-  }
-  return mailInfo; */
 
   try {
     const mailInfo = await nodemailer.sendMail(payload);

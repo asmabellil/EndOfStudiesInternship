@@ -9,7 +9,7 @@ const createUserValidation: ValidationSchema = {
     lastName: Joi.string().required(),
     role: Joi.string().required(),
     email: Joi.string().email().required(),
-    jobRef: Joi.string().required(),
+    userRef: Joi.string().required(),
     // jobTitle: Joi.string().allow(null, ''),
     jobTitle: Joi.string().required(),
     phoneNumber: Joi.string().required(),

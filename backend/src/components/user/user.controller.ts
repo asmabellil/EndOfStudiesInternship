@@ -71,9 +71,9 @@ const deleteUser = async (req: Request, res: Response) => {
 
 const listUser = async (req: Request, res: Response) => {
   try {
-    const { searchParams } = req.query; // Extracting searchParams from query
+    const { searchWord } = req.query; // Extracting searchParams from query
     const result = await userService.getListUser(
-      searchParams,
+      searchWord,
     );
     res.status(result.status);
     if (result.listUser) {

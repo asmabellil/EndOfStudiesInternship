@@ -38,7 +38,7 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
         firstName: user.firstName,
         role: user.role,
         email: user.email,
-        jobRef: user.jobRef,
+        userRef: user.userRef,
         jobTitle: user.jobTitle,
         phoneNumber: user.phoneNumber,
         gender: user.gender,
@@ -106,30 +106,35 @@ const deleteById = async (id: string): Promise<any> => {
   }
 };
 
-const getListUser = async (
-  searchParams: any,
-): Promise<any> => {
+const getListUser = async (searchWord: any): Promise<any> => {
   try {
+    const whereClause: any = {};
 
-    const whereClause: any = {  };
-
-    if (searchParams) {
-      Object.keys(searchParams).forEach((key) => {
-        whereClause[key] = { [Op.like]: `%${searchParams[key]}%` };
-      });
+    if (searchWord) {
+      whereClause[Op.or] = [
+        { firstName: { [Op.like]: `%${searchWord}%` } },
+        { lastName: { [Op.like]: `%${searchWord}%` } },
+        { email: { [Op.like]: `%${searchWord}%` } },
+        { role: { [Op.like]: `%${searchWord}%` } },
+        { userRef: { [Op.like]: `%${searchWord}%` } },
+        { phoneNumber: { [Op.like]: `%${searchWord}%` } },
+        { jobTitle: { [Op.like]: `%${searchWord}%` } },
+        { gender: { [Op.like]: `%${searchWord}%` } },
+      ];
     }
 
     const listUser = await UserModel.findAndCountAll({
       where: whereClause,
       attributes: { exclude: ['resetToken', 'password'] },
     });
-    
+
     return { status: 200, message: 'Users fetched successfully', listUser };
   } catch (err) {
     logger.error(`Error fetching user list: %O`, err.message);
-    return { status: 400, message: `Failed to fetch user list ${err.message}` };
+    return { status: 400, message: `Failed to fetch user list: ${err.message}` };
   }
 };
+
 
 // Function to change password with verification from database
 async function changePassword(userId, oldPassword, newPassword): Promise<any> {
