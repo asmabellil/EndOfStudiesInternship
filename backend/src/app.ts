@@ -13,9 +13,16 @@ import path from 'path';
 
 const app: Application = express();
 
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-
 app.use(cors());
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use(httpContext.middleware);
 app.use(httpLogger.successHandler);
 app.use(httpLogger.errorHandler);

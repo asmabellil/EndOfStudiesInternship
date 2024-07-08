@@ -1,22 +1,48 @@
-oracle database express edition:
+// oracle database express edition:
+
 1. install oracle database express edition (zip)
 2. Unzipp the folder 
 3. run setup.exe
 
 
-SQL developer:
+// SQL developer:
+
 1. install oracle sql developer
 2. unzipp
 3. run sqldeveloper.exe
 
 
-after that open cmd: 
+// after that open cmd: 
+
 1. lsnrctl start
 2. lsnrctl status
 3. configure a connection with oracle sql developer to the server (service name: XEPDB1)
 
 
-
+// Create Oracle user and grant privileges
 CREATE USER internship IDENTIFIED BY your_password;
 GRANT CONNECT, RESOURCE TO internship;
 ALTER USER internship QUOTA UNLIMITED ON USERS;
+
+
+// Uninstall Oracle 21c Express Edition (XE) from a Windows machine.
+
+** Stop all Oracle services running on your system: 
+    - Open Command Prompt as Administrator.
+    - Execute sc stop ... (for all oracle services)
+
+** Uninstall Oracle Software
+
+** Delete all Oracle Services
+    - Open Command Prompt as Administrator.
+    - Execute sc delete ... (for all oracle services)
+
+** Delete Oracle Home Directory.
+
+** Clean the Registry:
+    Open the Registry Editor by typing regedit in the Run dialog (Win + R).
+    Navigate to HKEY_LOCAL_MACHINE\SOFTWARE\ and delete the Oracle key.
+    Also, navigate to HKEY_CURRENT_USER\SOFTWARE\ and delete the Oracle key if present.
+    Warning: Be careful when editing the registry. Deleting the wrong entries can cause system issues.
+
+Restart Your Computer to ensure all changes take effect and Oracle services are completely removed.
