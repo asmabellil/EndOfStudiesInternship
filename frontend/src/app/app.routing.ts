@@ -16,6 +16,7 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthAdminGuard } from './configs/guards/auth-admin.guard';
 import { AuthEmployeeGuard } from './configs/guards/auth-employee.guard';
+import { AuthDisconnectedGuard } from './configs/guards/auth-disconnected.guard';
 
 const routes: Routes =[
     // { path: 'home',             component: HomeComponent },
@@ -30,7 +31,7 @@ const routes: Routes =[
     {
       path: 'admin',
       component: AdminLayoutComponent,
-      canActivate: [AuthAdminGuard], 
+      // canActivate: [AuthAdminGuard], 
       children: [
         { path: 'dashboard', component: DashboardComponent },
       ],
@@ -38,7 +39,7 @@ const routes: Routes =[
     {
       path: 'employee',
       component: EmployeeLayoutComponent,
-      canActivate: [AuthEmployeeGuard], 
+      // canActivate: [AuthEmployeeGuard], 
       children: [
         { path: 'profile', component: ProfileComponent },
         { path: 'home',    component: HomeComponent }
@@ -47,6 +48,7 @@ const routes: Routes =[
     {
       path: 'auth',
       component: AuthLayoutComponent,
+      // canActivate: [AuthDisconnectedGuard],
       children: [
         { path: 'login',            component: LoginComponent },
         { path: 'forgot-password',  component: ForgotPasswordComponent },

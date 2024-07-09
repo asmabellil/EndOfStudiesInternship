@@ -34,18 +34,19 @@ export class UserEffects {
         )
       )
     )
-  ), { dispatch: true });
+  ));
 
   getAllUsers$ = createEffect(() => this.actions$.pipe(
     ofType(UserActions.connectUserSuccess),
     filter((action) => action.decodedToken['role'] === 'Admin'),
+    take(1),
     mergeMap(() =>
       this.userService.getAllUsers().pipe(
         map((result) => UserActions.getAllUsersSuccess({ users: result.users })),
         catchError((error) => of(UserActions.getAllUsersFailure({ error })))
       )
     )
-  ), { dispatch: true });
+  ));
 
   disconnectUser$ = createEffect(() => this.actions$.pipe(
     ofType(UserActions.disconnectUser),

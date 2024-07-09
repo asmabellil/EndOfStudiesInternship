@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
-import { Role } from 'src/app/models/enums/Role.enum';
 import { AppState } from 'src/app/store/app.state';
-import { selectUserRole } from 'src/app/store/user/user.selector';
+import { isUserConnected } from 'src/app/store/user/user.selector';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthAdminGuard implements CanActivate {
+export class AuthDisconnectedGuard implements CanActivate {
 
-  constructor(private store: Store<AppState>
-) { }
-
+  constructor(private store: Store<AppState>) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      return this.store.select(selectUserRole).pipe(map((role) => role === Role.ADMIN))
+      return this.store.select(isUserConnected).pipe(map((isConnected) => !isConnected));
   }
+  
 }

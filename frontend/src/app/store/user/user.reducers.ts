@@ -14,11 +14,12 @@ export const userReducer = createReducer(
             token, 
             role: convertStringToRole(decodedToken['role']), 
             userId: decodedToken['userId'], 
-            user: user
+            user: user,
+            isUserConnected: true
         }
     })),
 
-    on(UserActions.disconnectUser, (state, ) => ({ ...state, token: null, role: null, userId: null })),
+    on(UserActions.disconnectUser, (state) => (initialUsers)),
 
-    on(UserActions.getAllUsersSuccess, (state, { users }) => ({ ...state, usersList: users }))
+    on(UserActions.getAllUsersSuccess, (state, { users }) => ({ ...state, usersList: {count: users['count'], rows: users['rows']} }))
 );

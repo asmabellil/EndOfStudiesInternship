@@ -5,16 +5,20 @@ export const initialUserState: UserState = {
   user: null,
   token: null,
   role: null,
-  userId: null
+  userId: null,
+  isUserConnected: false
 };
 
 export const initialUsers = {
-  usersList: null,
+  usersList: {count: -1, rows: null},
   userState: initialUserState
 }
 
 export interface Users {
-  usersList: User[];
+  usersList: {
+    count: number;
+    rows: User[];
+  }
   userState: UserState;
 }
 
@@ -23,5 +27,6 @@ export interface UserState {
   token: string | null;
   role: Role | null;
   userId: number | null;
+  isUserConnected: boolean;
 }
 

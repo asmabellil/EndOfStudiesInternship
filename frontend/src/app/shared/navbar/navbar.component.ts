@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { isUserConnected, selectUserFullName } from 'src/app/store/user/user.selector';
 import { Observable, tap } from 'rxjs';
 import { disconnectUser } from 'src/app/store/user/user.actions';
+import { AppState } from 'src/app/store/app.state';
 
 @Component({
     selector: 'app-navbar',
@@ -20,7 +21,8 @@ export class NavbarComponent implements OnInit {
     isUserConnected$: Observable<boolean>;
     userFullName$: Observable<string>;
 
-    constructor(public location: Location, private router: Router, private userService: UserService, private store: Store) {
+    constructor(public location: Location, private router: Router, private userService: UserService, private store: Store<AppState>
+) {
     }
 
     ngOnInit() {

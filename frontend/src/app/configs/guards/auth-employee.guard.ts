@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } fro
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
 import { Role } from 'src/app/models/enums/Role.enum';
+import { AppState } from 'src/app/store/app.state';
 import { selectUserRole } from 'src/app/store/user/user.selector';
 
 @Injectable({
@@ -10,15 +11,12 @@ import { selectUserRole } from 'src/app/store/user/user.selector';
 })
 export class AuthEmployeeGuard implements CanActivate {
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>
+) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      return this.store.select(selectUserRole).pipe(
-        map((role) => {
-          return role === Role.EMPLOYEE;
-        })
-      )
+      return this.store.select(selectUserRole).pipe(map((role) => role === Role.EMPLOYEE))
   }
   
 }

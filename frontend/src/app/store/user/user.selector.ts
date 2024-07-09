@@ -4,6 +4,8 @@ import { UserState } from './user.state';
 
 export const selectUserState = (state: AppState) => state.users?.userState;
 
+export const selectUsersList = (state: AppState) => state.users?.usersList;
+
 export const selectCurrentUser = createSelector(
     selectUserState,
   (state: UserState) => state?.user
@@ -20,11 +22,16 @@ export const selectUserRole = createSelector(
 );
 
 export const isUserConnected = createSelector(
-  selectCurrentToken,
-  (token: string) => token !== null
+  selectUserState,
+  (userState: UserState) => userState?.isUserConnected
 )
 
 export const selectUserFullName = createSelector(
   selectCurrentUser,
   (user) => user?.firstName + ' ' + user?.lastName
 );
+
+export const selectUsersListRows = createSelector(
+  selectUsersList,
+  (usersList) => usersList?.rows
+)

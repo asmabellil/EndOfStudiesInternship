@@ -1,67 +1,77 @@
 <main>
-    <div class="position-relative">
-      <!-- shape Hero -->
-      <section class="section section-lg section-shaped pb-250">
-        <div class="shape shape-style-1 shape-default">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-
-        <div class="container pt-lg-md">
-            <div class="row justify-content-center">
-                <div class="col-lg-12">
-                    <div class="card bg-secondary shadow border-0">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                              <th scope="col">#</th>
-                              <th scope="col">Country</th>
-                              <th scope="col">Area</th>
-                              <th scope="col">Population</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr *ngFor="let country of countries">
-                              <th scope="row">{{ country.id }}</th>
-                              <td>
-                                <img [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag" class="me-2" style="width: 20px">
-                                {{ country.name }}
-                              </td>
-                              <td>{{ country.area | number}}</td>
-                              <td>{{ country.population | number }}</td>
-                            </tr>
-                            </tbody>
-                          </table>
-                          
-                          <div class="d-flex justify-content-between p-2">
-                            <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" (pageChange)="refreshCountries()">
-                            </ngb-pagination>
-                          
-                            <select class="form-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshCountries()">
-                              <option [ngValue]="2">2 items per page</option>
-                              <option [ngValue]="4">4 items per page</option>
-                              <option [ngValue]="6">6 items per page</option>
-                            </select>
-                          </div>
-                    </div>
+  <div class="position-relative">
+    <!-- shape Hero -->
+    <section class="section section-lg section-shaped pb-250">
+      <div class="shape shape-style-1 shape-default">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="container pt-lg-md">
+        <div class="row justify-content-center">
+          <div class="col-lg-12">
+            <div class="card bg-secondary shadow border-0">
+              <div class="card-header bg-white">
+                <h2 class="mb-0">Users list</h2>
+              </div>
+              <div class="card-body px-lg-5 py-lg-5">
+                <table class="table table-striped bg-white">
+                  <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Position</th>
+                    <th scope="col">first Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Last Login</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let country of countries">
+                    <th scope="row">{{ country.id }}</th>
+                    <td>
+                      <img [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag" class="me-2" style="width: 20px">
+                      {{ country.name }}
+                    </td>
+                    <td>{{ country.area | number}}</td>
+                    <td>{{ country.population | number }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+                
+                <div class="d-flex justify-content-between p-2">
+                  <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" (pageChange)="refreshCountries()">
+                  </ngb-pagination>
+                
+                  <select class="form-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshCountries()">
+                    <option [ngValue]="2">2 items per page</option>
+                    <option [ngValue]="4">4 items per page</option>
+                    <option [ngValue]="6">6 items per page</option>
+                  </select>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
 
-        <!-- SVG separator -->
-        <div class="separator separator-bottom separator-skew">
-          <svg x="0" y="0" viewBox="0 -6 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
-          </svg>
-        </div>
-      </section>
-    </div>
-  </main>
+      <!-- SVG separator -->
+      <div class="separator separator-bottom separator-skew">
+        <svg x="0" y="0" viewBox="0 -6 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
+        </svg>
+      </div>
+    </section>
+  </div>
+</main>
   

@@ -8,11 +8,13 @@ import {
 import { Observable, switchMap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentToken } from 'src/app/store/user/user.selector';
+import { AppState } from 'src/app/store/app.state';
 
 @Injectable()
 export class RequestsInterceptor implements HttpInterceptor {
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>
+) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Get the token from wherever it is stored (e.g. local storage, cookie, etc.)

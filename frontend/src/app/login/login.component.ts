@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { Store } from '@ngrx/store';
 import { connectUser } from '../store/user/user.actions';
+import { AppState } from '../store/app.state';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,8 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   focus: boolean;
   focus1: boolean;
-  constructor(private router: Router, private userService: UserService, private store: Store) { }
+  constructor(private router: Router, private userService: UserService, private store: Store<AppState>
+) { }
 
   ngOnInit() {
     this.loginForm = new FormGroup({

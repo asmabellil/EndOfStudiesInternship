@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../store/app.state';
+import { Observable } from 'rxjs';
+import { User } from '../models/user.model';
+import { selectUsersList, selectUsersListRows } from '../store/user/user.selector';
 
 interface Country {
   id?: number;
@@ -96,25 +101,25 @@ const COUNTRIES: Country[] = [
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  focus: any;
-  focus1: any;
 
+  usersList$: Observable<User[]>;
   page = 1;
   pageSize = 4;
   collectionSize = COUNTRIES.length;
   countries: Country[];
   
-  constructor() {
+  constructor(private store: Store<AppState>) {
     this.refreshCountries();
   }
+
+  ngOnInit(): void {
+    this.usersList$ = this.store.select(selectUsersListRows);
+  }
+
 
   refreshCountries() {
     this.countries = COUNTRIES
       .map((country, i) => ({id: i + 1, ...country}))
       .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
   }
-
-  ngOnInit(): void {
-  }
-
 }
