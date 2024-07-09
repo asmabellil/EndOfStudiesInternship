@@ -5,6 +5,7 @@ import {
   resetPassword,
   verifyResetPasswordLink,
   updatePassword,
+  loginWithGmail
 } from '@components/authentification/auth.service';
 import jwt from 'jsonwebtoken';
 import consts from '@config/consts';
@@ -14,6 +15,22 @@ const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const token = await authentification(email, password);
+    if (!token) {
+      return res.status(401).json({ error: 'Adresse électronique ou mot de passe incorrect' });
+    }
+
+    res.status(httpStatus.CREATED).json({ token });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message || 'Une erreur est survenue lors de la connexion',
+    });
+  }
+};
+
+// Login
+const loginViaGmail = async (req: Request, res: Response) => {
+  try {
+    const token = await loginWithGmail(req.body);
     if (!token) {
       return res.status(401).json({ error: 'Adresse électronique ou mot de passe incorrect' });
     }
@@ -62,4 +79,4 @@ const changePassword = async (req: Request, res: Response) => {
   }
 };
 
-export { login, resetPasswordUser, handlePasswordResetLink, changePassword };
+export { login, resetPasswordUser, handlePasswordResetLink, changePassword, loginViaGmail };
