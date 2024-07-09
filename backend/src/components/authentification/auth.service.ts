@@ -10,6 +10,7 @@ import AppError from '@core/utils/appError';
 import httpStatus from 'http-status';
 import crypto from 'crypto';
 import verifyPasswordComplexity from '@core/utils/passwordComplexity';
+import { create } from '@components/user/user.service';
 
 // Login
 const authentification = async (email: string, password: string): Promise<string | null> => {
@@ -33,6 +34,25 @@ const authentification = async (email: string, password: string): Promise<string
   } catch (error) {
     logger.error(error);
     throw new Error('Une erreur est survenue lors de la connexion');
+  }
+};
+
+const loginWithGmail = async (user: any): Promise<UserModel | any> => {
+  try {
+    // Recherche de l'utilisateur dans la base de données
+    const userFound = await UserModel.findOne({ where: { email: user.email } });
+    if(userFound){
+      // Génération du jeton JWT
+      const token = jwt.sign({ userId: userFound.id, role: userFound.role }, consts.JWT_SECRET);
+      return token;
+    }else {
+      const newUser = await create(user);
+      const token = jwt.sign({ userId: newUser.user.dataValues.id, role: newUser.user.dataValues.role }, consts.JWT_SECRET);
+      return token;
+    }
+  } catch (error) {
+    logger.error(error);
+    throw new Error('Une erreur est survenue lors de la connexion avec google');
   }
 };
 
@@ -158,4 +178,4 @@ const updatePassword = async (password: string, userId: any): Promise<any> => {
   }
 };
 
-export { authentification, verifyResetPasswordLink, resetPassword, updatePassword };
+export { authentification, verifyResetPasswordLink, resetPassword, updatePassword, loginWithGmail };

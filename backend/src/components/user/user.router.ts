@@ -4,12 +4,9 @@ import protectedByApiKey from '@core/middlewares/apiKey.middleware';
 import validation from '@core/middlewares/validate.middleware';
 import * as userController from './user.controller';
 import { createUserValidation, validatePaginationParams, changePasswordValidation } from './createUser.validation';
-import consts from '@config/consts';
 // import { checkRole } from '@core/middlewares/checkRole.middleware';
 
 const router: Router = Router();
-
-const adminRole = [consts.ROLE.COMPANY_ADMIN];
 
 // e.g. createUser request's body is validated and protected by api-key
 router.post('/user/', [protectedByApiKey, validation(createUserValidation)], userController.createUser);

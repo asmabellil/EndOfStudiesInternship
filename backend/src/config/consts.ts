@@ -37,10 +37,19 @@ const SECOND_COLOR= process.env.SECOND_COLOR;
 
 // user Role
 const ROLE = {
-  SURTEC_USER: 'SURTEC_USER',
-  COMPANY_ADMIN: 'COMPANY_ADMIN',
-  INSTALLATEUR: 'INSTALLATEUR'
+  ADMIN: "Admin",
+  EMPLOYEE: "Employee"
 };
+
+const GENDER = {
+  MALE: "Male", 
+  FEMALE: "Female"
+};
+
+// Google Config
+const CLIENT_ID = process.env.CLIENT_ID
+const CLIENT_SECRET = process.env.CLIENT_SECRET
+const REDIRECT_URI = process.env.REDIRECT_URI
 
 // Password Config
 const PASSWORD_MIN_LENGTH = process.env.PASSWORD_MIN_LENGTH;
@@ -69,6 +78,7 @@ export default {
   SMTP_USER,
   domain,
   ROLE,
+  GENDER,
   FRONT_END_URL,
   FRONT_END_URL_API,
   MAIN_COLOR,
@@ -78,4 +88,7 @@ export default {
   PASSWORD_REQUIRE_DIGIT,
   PASSWORD_REQUIRE_LOWERCASE,
   PASSWORD_REQUIRE_UPPERCASE,
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REDIRECT_URI
 };

@@ -2,6 +2,7 @@ import * as authController from '@components/authentification/auth.controller';
 import express from 'express';
 import validation from '@core/middlewares/validate.middleware';
 import * as loginValidation from './login.validation';
+import { createUserValidation } from '@components/user/createUser.validation';
 
 const app = express.Router();
 
@@ -21,6 +22,10 @@ app.get('/verifyLink', async (req, res) => {
 
 app.post('/updatePassword', [validation(loginValidation.changePasswordValidation)], async (req, res) => {
   authController.changePassword(req, res);
+});
+
+app.post('/loginViaGmail', [validation(createUserValidation)], async (req, res) => {
+  authController.loginViaGmail(req, res);
 });
 
 export default app;
