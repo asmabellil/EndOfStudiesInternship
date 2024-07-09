@@ -15,6 +15,8 @@ import { FooterComponent } from './shared/footer/footer.component';
 
 import { HomeModule } from './home/home.module';
 import { LoginComponent } from './login/login.component';
+import { GoogleSignInComponent } from './google-sign-in/google-sign-in.component';
+import { DashComponent } from './dash/dash.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { LoginComponent } from './login/login.component';
     ProfileComponent,
     NavbarComponent,
     FooterComponent,
-    LoginComponent
+    LoginComponent,
+    GoogleSignInComponent,
+    DashComponent
   ],
   imports: [
     BrowserModule,

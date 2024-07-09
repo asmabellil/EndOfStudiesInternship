@@ -8,6 +8,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SignupComponent } from './signup/signup.component';
 import { LandingComponent } from './landing/landing.component';
 import { LoginComponent } from './login/login.component';
+import { DashComponent } from './dash/dash.component';
 
 const routes: Routes =[
     { path: 'home',             component: HomeComponent },
@@ -15,6 +16,7 @@ const routes: Routes =[
     { path: 'register',           component: SignupComponent },
     { path: 'landing',          component: LandingComponent },
     { path: 'login',          component: LoginComponent },
+    { path: 'dash',          component: DashComponent },
     { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
@@ -23,7 +25,7 @@ const routes: Routes =[
     CommonModule,
     BrowserModule,
     RouterModule.forRoot(routes,{
-      useHash: true
+      useHash: false
     })
   ],
   exports: [
