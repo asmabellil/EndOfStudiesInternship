@@ -27,6 +27,8 @@ export default class User extends Model {
 
   role: string;
 
+  enabled: boolean;
+
   public static associations: {
   };
 }
@@ -63,6 +65,10 @@ export const initUser = (sequelize) => {
         type: DataTypes.DATE,
         allowNull: true,
       },
+      enabled: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      }
     },
     {
       sequelize,
