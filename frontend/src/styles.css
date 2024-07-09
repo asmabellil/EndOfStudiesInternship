@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+.display-component {
+    display: block !important;
+}
+
+.clickable {
+    cursor: pointer;
+}

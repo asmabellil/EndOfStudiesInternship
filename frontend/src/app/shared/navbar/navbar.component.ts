@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { Location, PopStateEvent } from '@angular/common';
+import { UserService } from 'src/app/services/user.service';
+import { Store } from '@ngrx/store';
+import { isUserConnected, selectUserFullName } from 'src/app/store/user/user.selector';
+import { Observable, tap } from 'rxjs';
+import { disconnectUser } from 'src/app/store/user/user.actions';
 
 @Component({
     selector: 'app-navbar',
@@ -12,7 +17,10 @@ export class NavbarComponent implements OnInit {
     private lastPoppedUrl: string;
     private yScrollStack: number[] = [];
 
-    constructor(public location: Location, private router: Router) {
+    isUserConnected$: Observable<boolean>;
+    userFullName$: Observable<string>;
+
+    constructor(public location: Location, private router: Router, private userService: UserService, private store: Store) {
     }
 
     ngOnInit() {
@@ -32,6 +40,9 @@ export class NavbarComponent implements OnInit {
      this.location.subscribe((ev:PopStateEvent) => {
          this.lastPoppedUrl = ev.url;
      });
+
+     this.isUserConnected$ = this.store.select(isUserConnected);
+     this.userFullName$ = this.store.select(selectUserFullName);
     }
 
     isHome() {
@@ -52,5 +63,9 @@ export class NavbarComponent implements OnInit {
         else {
             return false;
         }
+    }
+
+    logOut() {
+        this.store.dispatch(disconnectUser());
     }
 }
