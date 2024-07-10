@@ -76,7 +76,7 @@ const resetPassword = async (email, primaryColor, secondaryColor) => {
     (user as any).resetToken = token;
     await user.save();
 
-    const link = `${consts.FRONT_END_URL}lockscreen/${token}`;
+    const link = `${consts.FRONT_END_URL}/#/auth/reset-password/${token}`;
     const mailOptions = {
       to: email,
       subject: 'Password Reset',
