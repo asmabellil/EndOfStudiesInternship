@@ -15,7 +15,7 @@ router.get('/user/:id', userController.readUser);
 
 router.get('/users', [protectedByApiKey, validatePaginationParams], userController.listUser);
 
-router.put('/user/:id', [protectedByApiKey, validation(createUserValidation)], userController.updateUser);
+router.put('/user/:id', [protectedByApiKey], userController.updateUser);
 
 router.delete('/user/:id', [protectedByApiKey], userController.deleteUser);
 
