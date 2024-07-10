@@ -28,4 +28,8 @@ export class UserService {
   getAllUsers(): Observable<{message: string, users: User[]}>{
     return this.httpClient.get<{message: string, users: User[]}>(this.USER_BASE_URL_API + 'users');
   }
+
+  addUser(user: User): Observable<{message: string, user: User}>{ 
+    return this.httpClient.post<{message: string, user: User}>(this.USER_BASE_URL_API + 'user', user);
+  }
 }

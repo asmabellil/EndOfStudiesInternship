@@ -31,7 +31,7 @@ const routes: Routes =[
     {
       path: 'admin',
       component: AdminLayoutComponent,
-      // canActivate: [AuthAdminGuard], 
+      canActivate: [AuthAdminGuard], 
       children: [
         { path: 'dashboard', component: DashboardComponent },
       ],
@@ -39,7 +39,7 @@ const routes: Routes =[
     {
       path: 'employee',
       component: EmployeeLayoutComponent,
-      // canActivate: [AuthEmployeeGuard], 
+      canActivate: [AuthEmployeeGuard], 
       children: [
         { path: 'profile', component: ProfileComponent },
         { path: 'home',    component: HomeComponent }
@@ -48,7 +48,7 @@ const routes: Routes =[
     {
       path: 'auth',
       component: AuthLayoutComponent,
-      // canActivate: [AuthDisconnectedGuard],
+      canActivate: [AuthDisconnectedGuard],
       children: [
         { path: 'login',            component: LoginComponent },
         { path: 'forgot-password',  component: ForgotPasswordComponent },
