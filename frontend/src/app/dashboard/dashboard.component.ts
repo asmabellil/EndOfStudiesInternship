@@ -1,98 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../store/app.state';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { User } from '../models/user.model';
-import { selectUsersList, selectUsersListRows } from '../store/user/user.selector';
-
-interface Country {
-  id?: number;
-  name: string;
-  flag: string;
-  area: number;
-  population: number;
-}
-
-const COUNTRIES: Country[] = [
-  {
-    name: 'Russia',
-    flag: 'f/f3/Flag_of_Russia.svg',
-    area: 17075200,
-    population: 146989754
-  },
-  {
-    name: 'France',
-    flag: 'c/c3/Flag_of_France.svg',
-    area: 640679,
-    population: 64979548
-  },
-  {
-    name: 'Germany',
-    flag: 'b/ba/Flag_of_Germany.svg',
-    area: 357114,
-    population: 82114224
-  },
-  {
-    name: 'Portugal',
-    flag: '5/5c/Flag_of_Portugal.svg',
-    area: 92090,
-    population: 10329506
-  },
-  {
-    name: 'Canada',
-    flag: 'c/cf/Flag_of_Canada.svg',
-    area: 9976140,
-    population: 36624199
-  },
-  {
-    name: 'Vietnam',
-    flag: '2/21/Flag_of_Vietnam.svg',
-    area: 331212,
-    population: 95540800
-  },
-  {
-    name: 'Brazil',
-    flag: '0/05/Flag_of_Brazil.svg',
-    area: 8515767,
-    population: 209288278
-  },
-  {
-    name: 'Mexico',
-    flag: 'f/fc/Flag_of_Mexico.svg',
-    area: 1964375,
-    population: 129163276
-  },
-  {
-    name: 'United States',
-    flag: 'a/a4/Flag_of_the_United_States.svg',
-    area: 9629091,
-    population: 324459463
-  },
-  {
-    name: 'India',
-    flag: '4/41/Flag_of_India.svg',
-    area: 3287263,
-    population: 1324171354
-  },
-  {
-    name: 'Indonesia',
-    flag: '9/9f/Flag_of_Indonesia.svg',
-    area: 1910931,
-    population: 263991379
-  },
-  {
-    name: 'Tuvalu',
-    flag: '3/38/Flag_of_Tuvalu.svg',
-    area: 26,
-    population: 11097
-  },
-  {
-    name: 'China',
-    flag: 'f/fa/Flag_of_the_People%27s_Republic_of_China.svg',
-    area: 9596960,
-    population: 1409517397
-  }
-];
+import { AppState } from '../store/app.state';
+import { selectUsersListRows } from '../store/user/user.selector';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Role } from '../models/enums/Role.enum';
+import { Gender } from '../models/enums/Gender.enum';
+import { addUser } from '../store/user/user.actions';
 
 
 @Component({
@@ -102,24 +18,59 @@ const COUNTRIES: Country[] = [
 })
 export class DashboardComponent implements OnInit {
 
+  roles: string[];
+  genders: string[];
+
   usersList$: Observable<User[]>;
-  page = 1;
-  pageSize = 4;
-  collectionSize = COUNTRIES.length;
-  countries: Country[];
+  closeResult: string;
+  userToAdd: User;
+  addingUserForm: FormGroup;
   
-  constructor(private store: Store<AppState>) {
-    this.refreshCountries();
-  }
+  constructor(private store: Store<AppState>, private modalService: NgbModal) {}
 
   ngOnInit(): void {
-    this.usersList$ = this.store.select(selectUsersListRows);
+    this.roles = Object.values(Role);
+    this.genders = Object.values(Gender);
+    this.userToAdd = new User();
+    this.userToAdd.role = null;
+    this.userToAdd.gender = null;
+
+    this.usersList$ = this.store.select(selectUsersListRows).pipe(
+      map(users => users ? [...users] : [])
+    );
+
+    this.addingUserForm = new FormGroup({
+      userRef: new FormControl(this.generateUserReference(),[Validators.required]),
+      firstName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
+      lastName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      role: new FormControl('', [Validators.required]), 
+      gender: new FormControl(''), 
+      jobTitle: new FormControl('', [Validators.pattern(/^[a-zA-Z]*$/)]), 
+      phoneNumber: new FormControl('', [Validators.pattern(/^\+?\d{8}$/)]), 
+    });
+  }
+
+  add(){
+    this.store.dispatch(addUser({user: this.userToAdd}));
+  }
+
+  open(content) {
+    this.modalService.open(content, { windowClass: 'modal-mini', size: 'lg', centered: true }).result.then((result) => {
+        this.closeResult = 'Closed with: $result';
+    }, (reason) => {
+        this.closeResult = 'Dismissed $this.getDismissReason(reason)';
+        this.userToAdd = new User();
+        this.userToAdd.role = null;
+        this.userToAdd.gender = null;
+        this.generateUserReference();
+    });
+   
+  }
+
+  generateUserReference() {
+    this.userToAdd.userRef = 'USR-' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0').toString();
   }
 
 
-  refreshCountries() {
-    this.countries = COUNTRIES
-      .map((country, i) => ({id: i + 1, ...country}))
-      .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
-  }
 }

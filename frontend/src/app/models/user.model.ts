@@ -14,4 +14,5 @@ export class User {
     createdAt: Date;
     updatedAt: Date;
     referrantId?: number; // The manager referrant of the user
+    enabled: boolean;
 }

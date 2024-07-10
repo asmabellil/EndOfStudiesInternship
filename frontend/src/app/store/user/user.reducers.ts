@@ -21,5 +21,7 @@ export const userReducer = createReducer(
 
     on(UserActions.disconnectUser, (state) => (initialUsers)),
 
-    on(UserActions.getAllUsersSuccess, (state, { users }) => ({ ...state, usersList: {count: users['count'], rows: users['rows']} }))
+    on(UserActions.getAllUsersSuccess, (state, { users }) => ({ ...state, usersList: {count: users['count'], rows: users['rows']} })),
+
+    on(UserActions.addUserSuccess, (state, { user }) => ({ ...state, usersList: {count: state.usersList.count + 1, rows: [...state.usersList.rows, user] } }))
 );

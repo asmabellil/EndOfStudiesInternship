@@ -14,3 +14,9 @@ export const disconnectUser = createAction('[NavBarComponent] disconnect');
 export const getAllUsersSuccess = createAction('[UserEffects] getAllUsersSuccess', props<{ users: User[] }>());
 
 export const getAllUsersFailure = createAction('[UserEffects] getAllUsersFailure', props<{ error: any }>());
+
+export const addUser = createAction('[DashboardComponent] addUser', props<{ user: User }>());
+
+export const addUserSuccess = createAction('[UserEffects] addUserSuccess', props<{ user: User }>());
+
+export const addUserFailure = createAction('[UserEffects] addUserFailure', props<{ error: any }>());
