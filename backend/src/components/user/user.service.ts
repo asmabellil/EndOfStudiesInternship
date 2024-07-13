@@ -19,6 +19,7 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
     const saltRounds = 10;
 
     const password = Math.random().toString(36).slice(-8);
+    console.log('password', password);
 
     const hashedPassword = await bcrypt.hash(password.toString(), saltRounds);
 
@@ -30,7 +31,7 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
     };
     logger.debug('------------ ', password);
     // Send email with password reset link
-    await sendMail(mailOptions); 
+    // await sendMail(mailOptions); 
 
     const newUser = await UserModel.create(
       {
