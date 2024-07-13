@@ -90,7 +90,7 @@ const resetPassword = async (email, primaryColor, secondaryColor) => {
     };
     logger.debug(link);
     // Send email with password reset link
-    // await sendMail(mailOptions);
+    await sendMail(mailOptions);
 
     return {
       status: 200,

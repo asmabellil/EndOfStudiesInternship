@@ -17,6 +17,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthAdminGuard } from './configs/guards/auth-admin.guard';
 import { AuthEmployeeGuard } from './configs/guards/auth-employee.guard';
 import { AuthDisconnectedGuard } from './configs/guards/auth-disconnected.guard';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 const routes: Routes =[
     // { path: 'home',             component: HomeComponent },
@@ -52,11 +53,12 @@ const routes: Routes =[
       children: [
         { path: 'login',            component: LoginComponent },
         { path: 'forgot-password',  component: ForgotPasswordComponent },
-        { path: 'reset-password',   component: ResetPasswordComponent },
+        { path: 'reset-password/:token',   component: ResetPasswordComponent },
         { path: '', redirectTo: "login", pathMatch: "full" },
         // other auth routes
       ],
     },
+    { path: 'unauthorized', component: UnauthorizedComponent },
     { path: '', redirectTo: 'auth/login', pathMatch: 'full' }
 ];
 

@@ -2,6 +2,7 @@
     position: relative;
     padding-top: $spacer * 4;
     padding-bottom: $spacer * 4;
+    min-height: calc(100vh - 126px);
 }
 
 .section-xl {
