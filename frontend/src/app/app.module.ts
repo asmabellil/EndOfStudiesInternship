@@ -26,9 +26,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { FooterComponent } from './shared/footer/footer.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { UserEffects } from './store/user/user.effects';
-import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
-import { rootReducer } from './store/root.reducer';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { userReducer } from './store/user/user.reducers';
 
 // primeNg imports
 import { ButtonModule } from 'primeng/button';
@@ -36,8 +34,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
 import { ToolbarModule } from 'primeng/toolbar';
-import {ToastModule} from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+
 
 
 
@@ -55,8 +52,7 @@ import { MessageService } from 'primeng/api';
     AdminLayoutComponent,
     EmployeeLayoutComponent,
     AuthLayoutComponent,
-    DashboardComponent,
-    UnauthorizedComponent
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -67,19 +63,16 @@ import { MessageService } from 'primeng/api';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    StoreModule.forRoot(rootReducer),
+    StoreModule.forRoot({ users: userReducer }),
     EffectsModule.forRoot([UserEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 30 }),
     TableModule,
 		ButtonModule,
     InputTextModule,
     ToolbarModule,
-    RippleModule,
-    ToastModule,
-    BrowserAnimationsModule
+    RippleModule
   ],
   providers: [
-    MessageService,
     { provide: HTTP_INTERCEPTORS, useClass: RequestsInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]

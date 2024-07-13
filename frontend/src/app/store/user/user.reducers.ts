@@ -23,9 +23,5 @@ export const userReducer = createReducer(
 
     on(UserActions.getAllUsersSuccess, (state, { users }) => ({ ...state, usersList: {count: users['count'], rows: users['rows']} })),
 
-    on(UserActions.addUserSuccess, (state, { user }) => ({ ...state, usersList: {count: state.usersList.count + 1, rows: [...state.usersList.rows, user] } })),
-
-    on(UserActions.updateUserSuccess, (state, { user }) => ({...state, usersList: {count: state.usersList.count, rows: state.usersList.rows.map(u => u.id === user.id ? user : u)}})),
-
-    on(UserActions.deleteUserSuccess, (state, { userId }) => ({...state, usersList: {count: state.usersList.count - 1, rows: state.usersList.rows.filter(u => u.id !== userId)}}))
+    on(UserActions.addUserSuccess, (state, { user }) => ({ ...state, usersList: {count: state.usersList.count + 1, rows: [...state.usersList.rows, user] } }))
 );

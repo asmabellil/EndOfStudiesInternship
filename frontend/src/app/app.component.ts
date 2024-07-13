@@ -53,23 +53,23 @@ export class AppComponent implements OnInit {
     };
     ngOnInit() {
       var navbar : HTMLElement = this.element.nativeElement.children[0].children[0];
-    //   this._router = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-    //       if (window.outerWidth > 991) {
-    //           window.document.children[0].scrollTop = 0;
-    //       }else{
-    //           window.document.activeElement.scrollTop = 0;
-    //       }
-    //       this.renderer.listen('window', 'scroll', (event) => {
-    //           const number = window.scrollY;
-    //           if (number > 150 || window.pageYOffset > 150) {
-    //               // add logic
-    //               navbar.classList.add('headroom--not-top');
-    //           } else {
-    //               // remove logic
-    //               navbar.classList.remove('headroom--not-top');
-    //           }
-    //       });
-    //   });
+      this._router = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+          if (window.outerWidth > 991) {
+              window.document.children[0].scrollTop = 0;
+          }else{
+              window.document.activeElement.scrollTop = 0;
+          }
+          this.renderer.listen('window', 'scroll', (event) => {
+              const number = window.scrollY;
+              if (number > 150 || window.pageYOffset > 150) {
+                  // add logic
+                  navbar.classList.add('headroom--not-top');
+              } else {
+                  // remove logic
+                  navbar.classList.remove('headroom--not-top');
+              }
+          });
+      });
       this.hasScrolled();
     }
 }

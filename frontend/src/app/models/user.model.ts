@@ -13,5 +13,6 @@ export class User {
     role: Role;
     createdAt: Date;
     updatedAt: Date;
+    referrantId?: number; // The manager referrant of the user
     enabled: boolean;
 }
