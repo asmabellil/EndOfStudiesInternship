@@ -15,7 +15,7 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
     if (count > 0) {
       return { status: 400, message: 'Email already used by another user' };
     }
-
+    
     const saltRounds = 10;
 
     const password = Math.random().toString(36).slice(-8);
@@ -30,9 +30,9 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
     };
     logger.debug('------------ ', password);
     // Send email with password reset link
-    // await sendMail(mailOptions);
+    await sendMail(mailOptions); 
 
-    const newUser: any = await UserModel.create(
+    const newUser = await UserModel.create(
       {
         lastName: user.lastName,
         firstName: user.firstName,
@@ -47,15 +47,11 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
       options,
     );
     logger.debug(`User created: %O`);
-    return {
-      status: 200,
-      message: 'User was created',
-      user: newUser.dataValues,
-    };
+    return { status: 200, message: 'User was created', user: newUser };
   } catch (err) {
     logger.error(`User create err: %O`, err.message);
     // Throw an error if user creation fails
-    return { status: 400, message: `User was not created' ${err.message}` };
+    return { status: 400, message: `User was not created' ${err.message}`  };
   }
 };
 
@@ -64,14 +60,11 @@ const read = async (id: string): Promise<any> => {
   try {
     logger.debug(`Sent user.id ${id}`);
     const user = await UserModel.findByPk(id);
-    return {
-      status: 200,
-      message: 'User found',
-      user: user ? (user.toJSON() as IUser) : null,
-    };
+    return { status: 200, message: 'User found', user:  user ? (user.toJSON() as IUser) : null };  
   } catch (error) {
     return { status: 400, message: `User was not found' ${error.message}` };
   }
+
 };
 
 const update = async (user: IUser): Promise<any> => {
@@ -85,10 +78,10 @@ const update = async (user: IUser): Promise<any> => {
       logger.debug(`User updated: %O`, user);
       return { status: 200, message: 'User updated', user };
     }
-    return { status: 400, message: 'User was not updated' };
+  return { status: 400, message: 'User was not updated'  };
   } catch (err) {
     logger.error(`User update err: %O`, err.message);
-    return { status: 400, message: `User was not updated' ${err.message}` };
+    return { status: 400, message: `User was not updated' ${err.message}`  };
   }
 };
 
@@ -138,12 +131,10 @@ const getListUser = async (searchWord: any): Promise<any> => {
     return { status: 200, message: 'Users fetched successfully', listUser };
   } catch (err) {
     logger.error(`Error fetching user list: %O`, err.message);
-    return {
-      status: 400,
-      message: `Failed to fetch user list: ${err.message}`,
-    };
+    return { status: 400, message: `Failed to fetch user list: ${err.message}` };
   }
 };
+
 
 // Function to change password with verification from database
 async function changePassword(userId, oldPassword, newPassword): Promise<any> {
@@ -192,4 +183,12 @@ async function changePassword(userId, oldPassword, newPassword): Promise<any> {
   }
 }
 
-export { create, read, update, deleteById, getListUser, changePassword };
+
+export {
+  create,
+  read,
+  update,
+  deleteById,
+  getListUser,
+  changePassword,
+};

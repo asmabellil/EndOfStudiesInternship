@@ -20,7 +20,7 @@ const createUser = async (req: Request, res: Response) => {
     const result = await userService.create(user);
     res.status(result.status);
     if (result.user) {
-      return res.send({ message: result.message, user: result.user });
+      return res.send({ message: result.message, user });
     }
     return res.send({ message: result.message });
   } catch (error) {

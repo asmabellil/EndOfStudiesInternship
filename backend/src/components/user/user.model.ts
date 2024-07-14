@@ -1,10 +1,11 @@
-import { Model, DataTypes, Association } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 
 export default class User extends Model {
   static associate(models) {
     // Define associations here
-    // User.belongsTo(models.Company);
+    User.hasMany(models.Leave, { foreignKey: 'userId' });
   }
+
   public id!: number;
 
   resetToken: string;
@@ -17,7 +18,7 @@ export default class User extends Model {
 
   firstName: Date;
 
-  lastName : string;
+  lastName: string;
 
   email: string;
 
@@ -29,8 +30,7 @@ export default class User extends Model {
 
   enabled: boolean;
 
-  public static associations: {
-  };
+  public static associations: {};
 }
 
 export const initUser = (sequelize) => {
@@ -61,14 +61,10 @@ export const initUser = (sequelize) => {
       //   type: DataTypes.INTEGER,
       //   allowNull: true,
       // },
-      lastLogin: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
       enabled: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true
-      }
+        defaultValue: true,
+      },
     },
     {
       sequelize,

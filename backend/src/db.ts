@@ -1,19 +1,10 @@
-import { initUser } from '@components/user/user.model';
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 import config from '@config/config';
+import { initUser } from '@components/user/user.model';
+import { initLeave } from '@components/leave/leave.model';
 
 dotenv.config(); // Load environment variables from .env file
-
-
-// Create a new Sequelize instance
-/* const sequelize = new Sequelize(DB_NAME!, DB_USER!, DB_PASSWORD, {
-  host: DB_HOST,
-  dialect: 'oracle',  // or 'postgres', 'sqlite', 'mariadb', 'mssql'
-  dialectOptions: {
-    connectString: DB_CONNECT_STRING
-  }
-}); */
 
 const sequelize = new Sequelize(
   config.database,
@@ -26,13 +17,20 @@ const sequelize = new Sequelize(
   },
 );
 
-
 // Initialize models
 const User = initUser(sequelize);
+const Leave = initLeave(sequelize);
 
-// Add associations if any
-if (User.associate) {
-  User.associate(sequelize.models);
-}
+const models = {
+  User,
+  Leave,
+};
 
-export { sequelize, User };
+// Establish associations
+Object.values(models).forEach((model) => {
+  if (model.associate) {
+    model.associate(models);
+  }
+});
+
+export { sequelize, User, Leave };

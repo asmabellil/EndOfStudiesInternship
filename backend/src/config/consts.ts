@@ -32,24 +32,36 @@ const FRONT_END_URL = process.env.FRONT_END_URL;
 const FRONT_END_URL_API = process.env.FRONT_END_URL_API;
 
 // Colors
-const MAIN_COLOR= process.env.MAIN_COLOR;
-const SECOND_COLOR= process.env.SECOND_COLOR;
+const MAIN_COLOR = process.env.MAIN_COLOR;
+const SECOND_COLOR = process.env.SECOND_COLOR;
 
 // user Role
 const ROLE = {
-  ADMIN: "Admin",
-  EMPLOYEE: "Employee"
+  ADMIN: 'Admin',
+  EMPLOYEE: 'Employee',
 };
 
 const GENDER = {
-  MALE: "Male", 
-  FEMALE: "Female"
+  MALE: 'Male',
+  FEMALE: 'Female',
+};
+
+const LEAVE_TYPE = {
+  Sick: 'Sick',
+  Vacation: 'Vacation',
+  Maternity: 'Maternity',
+};
+
+const LEAVE_STATUS = {
+  Pending: 'Pending',
+  Approved: 'Approved',
+  Rejected: 'Rejected',
 };
 
 // Google Config
-const CLIENT_ID = process.env.CLIENT_ID
-const CLIENT_SECRET = process.env.CLIENT_SECRET
-const REDIRECT_URI = process.env.REDIRECT_URI
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
 
 // Password Config
 const PASSWORD_MIN_LENGTH = process.env.PASSWORD_MIN_LENGTH;
@@ -90,5 +102,7 @@ export default {
   PASSWORD_REQUIRE_UPPERCASE,
   CLIENT_ID,
   CLIENT_SECRET,
-  REDIRECT_URI
+  REDIRECT_URI,
+  LEAVE_TYPE,
+  LEAVE_STATUS,
 };
