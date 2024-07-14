@@ -91,20 +91,17 @@ const resetPassword = async (email, primaryColor, secondaryColor) => {
     await user.save();
 
     const link = `${consts.FRONT_END_URL}/#/auth/reset-password/${token}`;
+
     const mailOptions = {
-      to: email,
-      subject: 'Password Reset',
-      html: `
-        <div style="font-family: Arial, sans-serif; color: ${primaryColor};">
-          <h1 style="color: ${primaryColor};">Password Reset Request</h1>
-          <p>You have requested a password reset. Click the button below to reset your password.</p>
-          <a href="${link}" style="background-color: ${secondaryColor}; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
-        </div>
-      `,
+      to: user.email,
+      subject: 'Password Reset Request',
+      template: 'passwordReset',
+      context: { firstName: user.firstName, link }, // Pass data to the template
     };
-    logger.debug(link);
-    // Send email with password reset link
-    await sendMail(mailOptions);
+    
+    // Send email with reset password link
+    //await sendMail(mailOptions);
+    
 
     return {
       status: 200,

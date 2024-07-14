@@ -1,26 +1,15 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import * as userService from '@components/user/user.service';
-import { IUser } from '@components/user/user.interface';
-import logger from '@core/utils/logger';
-import getToken from '@core/utils/getToken';
+import * as leaveService from '@components/leave/leave.service';
+import { ILeave } from '@components/leave/leave.interface';
 
-interface CreateUserResponse {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  language: string;
-  comment: string;
-}
-
-const createUser = async (req: Request, res: Response) => {
+const createLeave = async (req: Request, res: Response) => {
   try {
-    const user = req.body as IUser;
-    const result = await userService.create(user);
+    const leave = req.body as ILeave;
+    const result = await leaveService.create(leave);
     res.status(result.status);
-    if (result.user) {
-      return res.send({ message: result.message, user });
+    if (result.leave) {
+      return res.send({ message: result.message, leave });
     }
     return res.send({ message: result.message });
   } catch (error) {
@@ -28,28 +17,13 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
-const readUser = async (req: Request, res: Response) => {
+const readLeave = async (req: Request, res: Response) => {
   try {
     res.status(httpStatus.OK);
-    const result = await userService.read( req.params.id );
+    const result = await leaveService.read(req.params.id);
     res.status(result.status);
-    if (result.user) {
-      return res.send({ message: result.message, user: result.user });
-    }
-    return res.send({ message: result.message });
-  } catch (error) {
-    res.status(error.status).send({ message: error.message });
-  }
-
-};
-
-const updateUser = async (req: Request, res: Response) => {
-  try {
-    const user: IUser = { id: req.params.id, ...req.body };
-    const result = await userService.update(user);
-    res.status(result.status);
-    if (result.user) {
-      return res.send({ message: result.message, user });
+    if (result.leave) {
+      return res.send({ message: result.message, leave: result.leave });
     }
     return res.send({ message: result.message });
   } catch (error) {
@@ -57,11 +31,37 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-const deleteUser = async (req: Request, res: Response) => {
+const readLeavesByUser = async (req: Request, res: Response) => {
   try {
-    const result = await userService.deleteById(
-      req.params.id,
-    );
+    res.status(httpStatus.OK);
+    const result = await leaveService.readAllByUserId(req.params.id);
+    res.status(result.status);
+    if (result.leaves) {
+      return res.send({ message: result.message, leaves: result.leaves });
+    }
+    return res.send({ message: result.message });
+  } catch (error) {
+    res.status(error.status).send({ message: error.message });
+  }
+};
+
+const updateLeave = async (req: Request, res: Response) => {
+  try {
+    const leave: ILeave = { id: req.params.id, ...req.body };
+    const result = await leaveService.update(leave);
+    res.status(result.status);
+    if (result.leave) {
+      return res.send({ message: result.message, leave });
+    }
+    return res.send({ message: result.message });
+  } catch (error) {
+    res.status(error.status).send({ message: error.message });
+  }
+};
+
+const deleteLeave = async (req: Request, res: Response) => {
+  try {
+    const result = await leaveService.deleteById(req.params.id);
     res.status(result.status);
     res.send({ message: result.message });
   } catch (error) {
@@ -69,43 +69,24 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-const listUser = async (req: Request, res: Response) => {
+const listLeave = async (req: Request, res: Response) => {
   try {
-    const { searchWord } = req.query; // Extracting searchParams from query
-    const result = await userService.getListUser(
-      searchWord,
-    );
+    const result = await leaveService.getList();
     res.status(result.status);
-    if (result.listUser) {
-      return res.send({ message: result.message, users: result.listUser });
+    if (result.listLeave) {
+      return res.send({ message: result.message, leaves: result.listLeave });
     }
     return res.send({ message: result.message });
-  } catch (error) {
-    res.status(error.status).send({ message: error.message });
-  }
-};
-
-const changePassword = async (req: Request, res: Response) => {
-  try {
-    const authHeader = req.headers.authorization;
-    const decodedToken = getToken(authHeader);
-    const result = await userService.changePassword(
-      decodedToken.userId,
-      req.body.oldPassword,
-      req.body.newPassword,
-    );
-    res.status(result.status);
-    res.send({ message: result.message });
   } catch (error) {
     res.status(error.status).send({ message: error.message });
   }
 };
 
 export {
-  createUser,
-  readUser,
-  updateUser,
-  deleteUser,
-  listUser,
-  changePassword,
+  createLeave,
+  readLeave,
+  updateLeave,
+  deleteLeave,
+  listLeave,
+  readLeavesByUser,
 };

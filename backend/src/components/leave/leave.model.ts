@@ -25,6 +25,9 @@ export default class Leave extends Model {
   public updatedAt!: Date;
 
   public userId!: number;
+
+  public rejectionReason!: string;
+
 }
 
 export const initLeave = (sequelize) => {
@@ -58,6 +61,10 @@ export const initLeave = (sequelize) => {
       status: {
         type: DataTypes.STRING,
         defaultValue: 'Pending',
+      },
+      rejectionReason: {
+        type: DataTypes.STRING,
+        defaultValue: '',
       },
       createdAt: {
         type: DataTypes.DATE,

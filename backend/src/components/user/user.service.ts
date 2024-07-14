@@ -22,15 +22,14 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
 
     const hashedPassword = await bcrypt.hash(password.toString(), saltRounds);
 
-    // Hash the password asynchronously
     const mailOptions = {
       to: user.email,
       subject: `Welcome to our platform ${user.firstName}`,
-      html: `<p> Your password has been automatically generated ${password} </p>`,
+      template: 'welcomeEmail', // Specify the template file name without the .hbs extension
+      context: { firstName: user.firstName, password }, // Pass data to the template
     };
-    logger.debug('------------ ', password);
     // Send email with password reset link
-    // await sendMail(mailOptions);
+    //await sendMail(mailOptions);
 
     const newUser: any = await UserModel.create(
       {
@@ -67,13 +66,24 @@ const read = async (id: string): Promise<any> => {
   try {
     logger.debug(`Sent user.id ${id}`);
     const user = await UserModel.findByPk(id);
+
+    if (user) {
+      return {
+        status: 200,
+        message: 'User found',
+        user: user.toJSON() as IUser,
+      };
+    }
     return {
-      status: 200,
-      message: 'User found',
-      user: user ? (user.toJSON() as IUser) : null,
+      status: 404,
+      message: 'User not found',
+      user: null,
     };
   } catch (error) {
-    return { status: 400, message: `User was not found' ${error.message}` };
+    return {
+      status: 400,
+      message: `User was not found: ${error.message}`,
+    };
   }
 };
 
@@ -148,51 +158,4 @@ const getListUser = async (searchWord: any): Promise<any> => {
   }
 };
 
-// Function to change password with verification from database
-async function changePassword(userId, oldPassword, newPassword): Promise<any> {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    // Find the user by ID
-    const user = await UserModel.findByPk(userId);
-
-    // If user not found, return an error
-    if (!user) {
-      return { status: 404, message: 'Failed to update password' };
-    }
-
-    // Verify that old and new passwords are not the same
-    if (oldPassword === newPassword) {
-      return {
-        status: 400,
-        message: 'Old and new passwords cannot be the same',
-      };
-    }
-
-    const passwordComplexity = verifyPasswordComplexity(newPassword);
-    if (passwordComplexity) {
-      return { status: 400, message: passwordComplexity };
-    }
-
-    // Verify old password
-    const passwordMatch = await bcrypt.compare(oldPassword, user.password);
-
-    // If old password doesn't match, return an error
-    if (!passwordMatch) {
-      return { status: 400, message: 'Failed to update password' };
-    }
-
-    // Hash the new password
-    const saltRounds = 10;
-    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
-
-    // Update user's password with the new hashed password
-    await user.update({ password: hashedNewPassword });
-
-    return { status: 200, message: 'Password updated successfully' };
-  } catch (error) {
-    // Handle any errors
-    throw error;
-  }
-}
-
-export { create, read, update, deleteById, getListUser, changePassword };
+export { create, read, update, deleteById, getListUser };

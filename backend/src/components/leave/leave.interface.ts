@@ -1,13 +1,9 @@
-export interface IUser {
+export interface ILeave {
   id: number;
-  resetToken: string;
-  password: string;
-  userRef: string;
-  jobTitle: string;
-  firstName: Date;
-  lastName : string;
-  email: string;
-  phoneNumber: string;
-  gender: string;
-  role: string;
+  leaveType: string;
+  startDate: Date;
+  endDate: Date;
+  reason: string;
+  status: string;
+  userId: number;
 }

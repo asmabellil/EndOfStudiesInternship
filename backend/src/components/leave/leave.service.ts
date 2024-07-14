@@ -1,194 +1,178 @@
 /* eslint-disable import/no-import-module-exports */
-import httpStatus from 'http-status';
-import AppError from '@core/utils/appError';
 import logger from '@core/utils/logger';
-import bcrypt from 'bcrypt';
-import UserModel from '@components/user/user.model';
-import { IUser } from '@components/user/user.interface';
+import { ILeave } from '@components/leave/leave.interface';
 import { Op } from 'sequelize';
-import verifyPasswordComplexity from '@core/utils/passwordComplexity';
 import { sendMail } from '@config/mail';
+import Leave from '@components/leave/leave.model';
+import User from '@components/user/user.model';
 
-const create = async (user: IUser, options: any = {}): Promise<any> => {
+const create = async (leave: ILeave, options: any = {}): Promise<any> => {
   try {
-    const count = await UserModel.count({ where: { email: user.email } });
-    if (count > 0) {
-      return { status: 400, message: 'Email already used by another user' };
-    }
-    
-    const saltRounds = 10;
-
-    const password = Math.random().toString(36).slice(-8);
-
-    const hashedPassword = await bcrypt.hash(password.toString(), saltRounds);
-
-    // Hash the password asynchronously
-    const mailOptions = {
-      to: user.email,
-      subject: `Welcome to our platform ${user.firstName}`,
-      html: `<p> Your password has been automatically generated ${password} </p>`,
-    };
-    logger.debug('------------ ', password);
-    // Send email with password reset link
-    await sendMail(mailOptions); 
-
-    const newUser = await UserModel.create(
+    const newLeave: any = await Leave.create(
       {
-        lastName: user.lastName,
-        firstName: user.firstName,
-        role: user.role,
-        email: user.email,
-        userRef: user.userRef,
-        jobTitle: user.jobTitle,
-        phoneNumber: user.phoneNumber,
-        gender: user.gender,
-        password: hashedPassword,
+        leaveType: leave.leaveType,
+        startDate: leave.startDate,
+        endDate: leave.endDate,
+        reason: leave.reason,
+        status: leave.startDate,
+        userId: leave.userId,
       },
       options,
     );
-    logger.debug(`User created: %O`);
-    return { status: 200, message: 'User was created', user: newUser };
+    logger.debug(`Leave created: %O`);
+    return {
+      status: 200,
+      message: 'Leave was created',
+      leave: newLeave.DataValues,
+    };
   } catch (err) {
-    logger.error(`User create err: %O`, err.message);
-    // Throw an error if user creation fails
-    return { status: 400, message: `User was not created' ${err.message}`  };
+    logger.error(`Leave create err: %O`, err.message);
+    // Throw an error if leave creation fails
+    return { status: 400, message: `Leave was not created' ${err.message}` };
   }
 };
 
-// Get user by id
+// Get leave by id
 const read = async (id: string): Promise<any> => {
   try {
-    logger.debug(`Sent user.id ${id}`);
-    const user = await UserModel.findByPk(id);
-    return { status: 200, message: 'User found', user:  user ? (user.toJSON() as IUser) : null };  
-  } catch (error) {
-    return { status: 400, message: `User was not found' ${error.message}` };
-  }
+    logger.debug(`Sent leave.id ${id}`);
+    const leave = await Leave.findByPk(id);
 
+    if (leave) {
+      return {
+        status: 200,
+        message: 'Leave found',
+        leave: leave.toJSON() ,
+      };
+    }
+    return {
+      status: 404,
+      message: 'Leave not found',
+      leave: null,
+    };
+  } catch (error) {
+    return {
+      status: 400,
+      message: `Leave was not found: ${error.message}`,
+    };
+  }
 };
 
-const update = async (user: IUser): Promise<any> => {
+// Get all leaves for a user by userId
+const readAllByUserId = async (userId: string): Promise<any> => {
   try {
-    const fieldsToUpdate = { ...user };
-    delete fieldsToUpdate.id; // Exclude the ID field from being updated
-    const affectedRows = await UserModel.update(fieldsToUpdate, {
-      where: { id: user.id },
-    });
-    if (affectedRows[0] > 0) {
-      logger.debug(`User updated: %O`, user);
-      return { status: 200, message: 'User updated', user };
+    logger.debug(`Sent user.id ${userId}`);
+    const leaves = await Leave.findAll({ where: { userId } });
+
+    if (leaves.length > 0) {
+      return {
+        status: 200,
+        message: 'Leaves found',
+        leaves: leaves.map((leave) => leave.toJSON()),
+      };
     }
-  return { status: 400, message: 'User was not updated'  };
+    return {
+      status: 404,
+      message: 'No leaves found for this user',
+      leaves: [],
+    };
+  } catch (error) {
+    return {
+      status: 400,
+      message: `Leaves could not be retrieved: ${error.message}`,
+    };
+  }
+};
+
+const update = async (leave: any): Promise<any> => {
+  try {
+    const fieldsToUpdate = { ...leave };
+    delete fieldsToUpdate.id; // Exclude the ID field from being updated
+    const affectedRows = await Leave.update(fieldsToUpdate, {
+      where: { id: leave.id },
+    });
+    // Fetch user details
+    const user = await User.findByPk(leave.userId);
+
+    const startDate = new Date(leave.startDate);
+    const endDate = new Date(leave.endDate);
+
+    console.log(user.email, leave.status);
+    
+
+    if (leave.status === 'Approved') {
+      const mailOptions = {
+        to: user.email,
+        subject: 'Leave Request Accepted',
+        template: 'leaveAccepted',
+        context: {
+          firstName: user.firstName,
+          startDate: startDate.toDateString(),
+          endDate: endDate.toDateString(),
+          leaveType: leave.leaveType,
+          reason: leave.reason
+        }
+      };
+      await sendMail(mailOptions);
+    } else if (leave.status === 'Rejected') {
+      const mailOptions = {
+        to: user.email,
+        subject: 'Leave Request Declined',
+        template: 'leaveDeclined',
+        context: {
+          firstName: user.firstName,
+          startDate: startDate.toDateString(),
+          endDate: endDate.toDateString(),
+          leaveType: leave.leaveType,
+          rejectionReason: leave.rejectionReason
+        }
+      };
+      await sendMail(mailOptions);
+    }
+    if (affectedRows[0] > 0) {
+      logger.debug(`Leave updated: %O`, leave);
+      return { status: 200, message: 'Leave updated', leave };
+    }
+    return { status: 400, message: 'Leave was not updated' };
   } catch (err) {
-    logger.error(`User update err: %O`, err.message);
-    return { status: 400, message: `User was not updated' ${err.message}`  };
+    logger.error(`Leave update err: %O`, err.message);
+    return { status: 400, message: `Leave was not updated' ${err.message}` };
   }
 };
 
 const deleteById = async (id: string): Promise<any> => {
   try {
-    const userExist = await UserModel.count({ where: { id } });
+    const leaveExist = await Leave.count({ where: { id } });
 
-    if (userExist !== 1) {
-      return { status: 400, message: 'User was not found!' };
+    if (leaveExist !== 1) {
+      return { status: 400, message: 'Leave was not found!' };
     }
-    const deletedRowsCount = await UserModel.destroy({
+    const deletedRowsCount = await Leave.destroy({
       where: { id },
     });
 
     if (deletedRowsCount > 0) {
-      logger.debug(`User ${id} has been removed`);
-      return { status: 200, message: 'User was deleted successfully' };
+      logger.debug(`Leave ${id} has been removed`);
+      return { status: 200, message: 'Leave was deleted successfully' };
     }
   } catch (err) {
-    logger.error(`User delete err: %O`, err.message);
+    logger.error(`Leave delete err: %O`, err.message);
     return { status: 400, message: err.message };
   }
 };
 
-const getListUser = async (searchWord: any): Promise<any> => {
+const getList = async (): Promise<any> => {
   try {
-    const whereClause: any = {};
+    const listLeave = await Leave.findAndCountAll();
 
-    if (searchWord) {
-      whereClause[Op.or] = [
-        { firstName: { [Op.like]: `%${searchWord}%` } },
-        { lastName: { [Op.like]: `%${searchWord}%` } },
-        { email: { [Op.like]: `%${searchWord}%` } },
-        { role: { [Op.like]: `%${searchWord}%` } },
-        { userRef: { [Op.like]: `%${searchWord}%` } },
-        { phoneNumber: { [Op.like]: `%${searchWord}%` } },
-        { jobTitle: { [Op.like]: `%${searchWord}%` } },
-        { gender: { [Op.like]: `%${searchWord}%` } },
-      ];
-    }
-
-    const listUser = await UserModel.findAndCountAll({
-      where: whereClause,
-      attributes: { exclude: ['resetToken', 'password'] },
-    });
-
-    return { status: 200, message: 'Users fetched successfully', listUser };
+    return { status: 200, message: 'Leaves fetched successfully', listLeave };
   } catch (err) {
-    logger.error(`Error fetching user list: %O`, err.message);
-    return { status: 400, message: `Failed to fetch user list: ${err.message}` };
+    logger.error(`Error fetching leave list: %O`, err.message);
+    return {
+      status: 400,
+      message: `Failed to fetch leave list: ${err.message}`,
+    };
   }
 };
 
-
-// Function to change password with verification from database
-async function changePassword(userId, oldPassword, newPassword): Promise<any> {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    // Find the user by ID
-    const user = await UserModel.findByPk(userId);
-
-    // If user not found, return an error
-    if (!user) {
-      return { status: 404, message: 'Failed to update password' };
-    }
-
-    // Verify that old and new passwords are not the same
-    if (oldPassword === newPassword) {
-      return {
-        status: 400,
-        message: 'Old and new passwords cannot be the same',
-      };
-    }
-
-    const passwordComplexity = verifyPasswordComplexity(newPassword);
-    if (passwordComplexity) {
-      return { status: 400, message: passwordComplexity };
-    }
-
-    // Verify old password
-    const passwordMatch = await bcrypt.compare(oldPassword, user.password);
-
-    // If old password doesn't match, return an error
-    if (!passwordMatch) {
-      return { status: 400, message: 'Failed to update password' };
-    }
-
-    // Hash the new password
-    const saltRounds = 10;
-    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
-
-    // Update user's password with the new hashed password
-    await user.update({ password: hashedNewPassword });
-
-    return { status: 200, message: 'Password updated successfully' };
-  } catch (error) {
-    // Handle any errors
-    throw error;
-  }
-}
-
-
-export {
-  create,
-  read,
-  update,
-  deleteById,
-  getListUser,
-  changePassword,
-};
+export { create, read, update, deleteById, getList, readAllByUserId };
