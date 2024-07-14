@@ -20,6 +20,7 @@ const createUserValidation: ValidationSchema = {
 
 const updateUserValidation: ValidationSchema = {
   body: Joi.object().keys({
+    id: Joi.number().required(),
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     role: Joi.string().valid(consts.ROLE.ADMIN,consts.ROLE.EMPLOYEE).required(),
@@ -32,14 +33,6 @@ const updateUserValidation: ValidationSchema = {
     enabled: Joi.boolean().required(),
   }),
 };
-
-const udateUserValidation: ValidationSchema = {
-  body: Joi.object().keys({
-    first_name: Joi.string().required(),
-    last_name: Joi.string().required(),
-  }),
-};
-
 const validatePaginationParams = (req: Request, res: Response, next: NextFunction): void => {
   const { page: rawPage, limit: rawLimit } = req.query;
 
@@ -93,4 +86,4 @@ const updateTechnicianValidation: ValidationSchema = {
   }),
 };
 
-export { createUserValidation, validatePaginationParams, changePasswordValidation, udateUserValidation, createTechnicianValidation, updateTechnicianValidation, updateUserValidation };
+export { createUserValidation, validatePaginationParams, changePasswordValidation, createTechnicianValidation, updateTechnicianValidation, updateUserValidation };
