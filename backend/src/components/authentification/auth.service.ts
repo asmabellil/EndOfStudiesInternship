@@ -13,7 +13,10 @@ import verifyPasswordComplexity from '@core/utils/passwordComplexity';
 import { create } from '@components/user/user.service';
 
 // Login
-const authentification = async (email: string, password: string): Promise<string | null> => {
+const authentification = async (
+  email: string,
+  password: string,
+): Promise<string | null> => {
   try {
     // Recherche de l'utilisateur dans la base de données
     const userFound = await UserModel.findOne({ where: { email } });
@@ -29,7 +32,10 @@ const authentification = async (email: string, password: string): Promise<string
     }
 
     // Génération du jeton JWT
-    const token = jwt.sign({ userId: user.id, role: user.role }, consts.JWT_SECRET);
+    const token = jwt.sign(
+      { userId: user.id, role: user.role },
+      consts.JWT_SECRET,
+    );
     return token;
   } catch (error) {
     logger.error(error);
@@ -41,15 +47,23 @@ const loginWithGmail = async (user: any): Promise<UserModel | any> => {
   try {
     // Recherche de l'utilisateur dans la base de données
     const userFound = await UserModel.findOne({ where: { email: user.email } });
-    if(userFound){
+    if (userFound) {
       // Génération du jeton JWT
-      const token = jwt.sign({ userId: userFound.id, role: userFound.role }, consts.JWT_SECRET);
-      return token;
-    }else {
-      const newUser = await create(user);
-      const token = jwt.sign({ userId: newUser.user.dataValues.id, role: newUser.user.dataValues.role }, consts.JWT_SECRET);
+      const token = jwt.sign(
+        { userId: userFound.id, role: userFound.role },
+        consts.JWT_SECRET,
+      );
       return token;
     }
+    const newUser = await create(user);
+    const token = jwt.sign(
+      {
+        userId: newUser.user.dataValues.id,
+        role: newUser.user.dataValues.role,
+      },
+      consts.JWT_SECRET,
+    );
+    return token;
   } catch (error) {
     logger.error(error);
     throw new Error('Une erreur est survenue lors de la connexion avec google');
@@ -67,7 +81,7 @@ const generateResetToken = (id) => {
 const resetPassword = async (email, primaryColor, secondaryColor) => {
   try {
     const user = await UserModel.findOne({ where: { email } });
-    if (!user) return { status: 400, message: "L'utilisateur n'existe pas" };
+    if (!user) return { status: 400, message: 'The user was not found' };
 
     // Generate reset token
     const token = generateResetToken(user.dataValues.id);
@@ -94,10 +108,11 @@ const resetPassword = async (email, primaryColor, secondaryColor) => {
 
     return {
       status: 200,
-      message: 'Lien de réinitialisation du mot de passe envoyé à votre adresse électronique',
+      message:
+        'Password reset link sent to your e-mail address',
     };
   } catch (error) {
-    throw new Error(error.message || "Une erreur s'est produite");
+    throw new Error(error.message || "An error has occurred");
   }
 };
 
@@ -111,7 +126,9 @@ interface VerifyResetPasswordLinkResponse {
   message: string;
 }
 
-const verifyResetPasswordLink = async (token: string): Promise<VerifyResetPasswordLinkResponse> => {
+const verifyResetPasswordLink = async (
+  token: string,
+): Promise<VerifyResetPasswordLinkResponse> => {
   try {
     // Verify the token
     const decoded = jwt.verify(token, consts.JWT_SECRET) as DecodedToken;
@@ -119,7 +136,7 @@ const verifyResetPasswordLink = async (token: string): Promise<VerifyResetPasswo
     // Check if the token has expired
     const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds since Unix epoch
     if (decoded.exp < currentTime) {
-      return { status: 401, message: 'Le jeton a expiré' }; // Token is expired
+      return { status: 401, message: 'Token has expired' }; // Token is expired
     }
 
     // Check if the token matches a user in your database
@@ -129,19 +146,22 @@ const verifyResetPasswordLink = async (token: string): Promise<VerifyResetPasswo
     if (!user) {
       return {
         status: 401,
-        message: "Le jeton ne correspond pas à l'utilisateur",
+        message: "The token does not correspond to the user",
       };
     }
 
     // eslint-disable-next-line security/detect-possible-timing-attacks
     if (user.dataValues.resetToken !== token) {
-      return { status: 401, message: "Le jeton ne correspond pas à l'utilisateur" };
+      return {
+        status: 401,
+        message: "The token does not correspond to the user",
+      };
     }
 
     // If no errors occurred during verification, the token is valid
     return {
       status: 200,
-      message: 'succès',
+      message: 'Success',
     };
   } catch (error) {
     logger.error(error);
@@ -170,7 +190,10 @@ const updatePassword = async (password: string, userId: any): Promise<any> => {
     );
     if (affectedRows[0] > 0) {
       // logger.debug(`User updated: %O`, user);
-      return { status: 200, message: 'Le mot de passe a été modifié avec succès' };
+      return {
+        status: 200,
+        message: 'Password has been updated successfully',
+      };
     }
   } catch (err) {
     logger.error(`User update err: %O`, err.message);
@@ -178,4 +201,10 @@ const updatePassword = async (password: string, userId: any): Promise<any> => {
   }
 };
 
-export { authentification, verifyResetPasswordLink, resetPassword, updatePassword, loginWithGmail };
+export {
+  authentification,
+  verifyResetPasswordLink,
+  resetPassword,
+  updatePassword,
+  loginWithGmail,
+};

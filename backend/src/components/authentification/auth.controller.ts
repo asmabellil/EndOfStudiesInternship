@@ -49,7 +49,7 @@ const resetPasswordUser = async (req, res) => {
     const result = await resetPassword(email, consts.MAIN_COLOR, consts.SECOND_COLOR);
     res.status(result.status).json({ message: result.message });
   } catch (error) {
-    res.status(500).json({ error: "Une erreur s'est produite" });
+    res.status(500).json({ error: "An error has occurred" });
   }
 };
 
@@ -59,7 +59,7 @@ const handlePasswordResetLink = async (req, res) => {
     const result = await verifyResetPasswordLink(token);
     return res.status(result.status).json({ message: result.message });
   } catch (error) {
-    res.status(500).json({ error: "Une erreur s'est produite" });
+    res.status(500).json({ error: "An error has occurred" });
   }
 };
 
