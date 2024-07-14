@@ -16,13 +16,13 @@ const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const token = await authentification(email, password);
     if (!token) {
-      return res.status(401).json({ error: 'Adresse électronique ou mot de passe incorrect' });
+      return res.status(401).json({ error: 'Incorrect e-mail address or password' });
     }
 
     res.status(httpStatus.CREATED).json({ token });
   } catch (error) {
     res.status(500).json({
-      error: error.message || 'Une erreur est survenue lors de la connexion',
+      error: error.message || 'An error has occurred during connection',
     });
   }
 };
@@ -32,13 +32,13 @@ const loginViaGmail = async (req: Request, res: Response) => {
   try {
     const token = await loginWithGmail(req.body);
     if (!token) {
-      return res.status(401).json({ error: 'Adresse électronique ou mot de passe incorrect' });
+      return res.status(401).json({ error: 'Incorrect e-mail address or password' });
     }
 
     res.status(httpStatus.CREATED).json({ token });
   } catch (error) {
     res.status(500).json({
-      error: error.message || 'Une erreur est survenue lors de la connexion',
+      error: error.message || 'An error has occurred during connection',
     });
   }
 };

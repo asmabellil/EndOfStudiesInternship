@@ -30,7 +30,7 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
     };
     logger.debug('------------ ', password);
     // Send email with password reset link
-    await sendMail(mailOptions);
+    // await sendMail(mailOptions);
 
     const newUser: any = await UserModel.create(
       {

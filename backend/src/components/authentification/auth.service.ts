@@ -39,7 +39,7 @@ const authentification = async (
     return token;
   } catch (error) {
     logger.error(error);
-    throw new Error('Une erreur est survenue lors de la connexion');
+    throw new Error('An error has occurred during connection');
   }
 };
 
@@ -66,7 +66,7 @@ const loginWithGmail = async (user: any): Promise<UserModel | any> => {
     return token;
   } catch (error) {
     logger.error(error);
-    throw new Error('Une erreur est survenue lors de la connexion avec google');
+    throw new Error('An error has occurred during connection avec google');
   }
 };
 
