@@ -3,7 +3,7 @@ import { Router } from 'express';
 import protectedByApiKey from '@core/middlewares/apiKey.middleware';
 import validation from '@core/middlewares/validate.middleware';
 import * as userController from './user.controller';
-import { createUserValidation, validatePaginationParams, changePasswordValidation, updateUserValidation } from './createUser.validation';
+import { createUserValidation, updateUserValidation } from './createUser.validation';
 // import { checkRole } from '@core/middlewares/checkRole.middleware';
 
 const router: Router = Router();
@@ -13,12 +13,10 @@ router.post('/user/', [protectedByApiKey, validation(createUserValidation)], use
 
 router.get('/user/:id', userController.readUser);
 
-router.get('/users', [protectedByApiKey, validatePaginationParams], userController.listUser);
+router.get('/users', [protectedByApiKey], userController.listUser);
 
 router.put('/user/:id', [protectedByApiKey, validation(updateUserValidation)], userController.updateUser);
 
 router.delete('/user/:id', [protectedByApiKey], userController.deleteUser);
-
-router.put('/user/changePassword/', [protectedByApiKey, validation(changePasswordValidation)], userController.changePassword);
 
 export default router;

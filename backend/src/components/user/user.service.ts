@@ -47,10 +47,13 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
       options,
     );
     logger.debug(`User created: %O`);
+
+    const { password: _, ...userWithoutPassword } = newUser.dataValues;
+
     return {
       status: 200,
       message: 'User was created',
-      user: newUser.dataValues,
+      user: userWithoutPassword,
     };
   } catch (err) {
     logger.error(`User create err: %O`, err.message);
