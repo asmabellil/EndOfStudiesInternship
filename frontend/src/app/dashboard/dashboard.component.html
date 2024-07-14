@@ -60,7 +60,7 @@
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." class="mr-2"/>
               
-                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-outlined p-button-info p-mr-2" (click)="open(addUser)"></button>
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-outlined p-button-default p-mr-2" (click)="open(addUser)"></button>
                         <ng-template #addUser let-c="close" let-d="dismiss">
                           <div class="modal-content">
                             <div class="modal-body p-0">
@@ -72,7 +72,7 @@
                                   <p>All fields are required!</p>
                                   <form role="form" [formGroup]="addingUserForm">
                                     <div class="form-group d-flex" style="width: 49%;">
-                                      <input type="text" placeholder="User Reference" class="form-control mr-2 bg-white" disabled="" formControlName="userRef" [(ngModel)]="userToAdd.userRef" style="text-align: center;">
+                                      <input type="text" placeholder="User Reference" class="form-control mr-2 bg-white" disabled="" formControlName="userRef" style="text-align: center;">
                                       <button class="btn btn-icon btn-2 btn-outline-default" type="button" (click)="generateUserReference()">
                                         <span class="btn-inner--icon"><i class="ni ni-atom"></i></span>
                                       </button>
@@ -80,14 +80,15 @@
 
                                     <div class="form-group d-flex justify-content-between">
                                       <div class="input-group mr-3">
-                                          <div class="w-100"><input type="text" class="form-control" placeholder="First Name" formControlName="firstName" [(ngModel)]="userToAdd.firstName"></div>                                        <div *ngIf="addingUserForm.get('firstName').invalid && addingUserForm.get('firstName').touched" class="invalid-feedback display-component">
+                                        <div class="w-100"><input type="text" class="form-control" placeholder="First Name" formControlName="firstName"></div>
+                                        <div *ngIf="addingUserForm.get('firstName').invalid && addingUserForm.get('firstName').touched" class="invalid-feedback display-component">
                                           <div *ngIf="addingUserForm.get('firstName').errors.required">First Name is required!</div>
                                           <div *ngIf="addingUserForm.get('firstName').errors.pattern">First Name should contain only characters!</div>
                                         </div>
                                       </div>
 
                                       <div class="input-group">
-                                        <div class="w-100"><input type="text" class="form-control" placeholder="Last Name" formControlName="lastName" [(ngModel)]="userToAdd.lastName"></div>
+                                        <div class="w-100"><input type="text" class="form-control" placeholder="Last Name" formControlName="lastName"></div>
                                         <div *ngIf="addingUserForm.get('lastName').invalid && addingUserForm.get('lastName').touched" class="invalid-feedback display-component">
                                           <div *ngIf="addingUserForm.get('lastName').errors.required">Last Name is required!</div>
                                           <div *ngIf="addingUserForm.get('lastName').errors.pattern">Last Name should contain only characters!</div>
@@ -97,7 +98,7 @@
 
                                     <div class="form-group d-flex justify-content-between">
                                       <div class="input-group">
-                                        <div class="w-100"><input type="text" class="form-control" placeholder="Email" formControlName="email" [(ngModel)]="userToAdd.email"></div>
+                                        <div class="w-100"><input type="text" class="form-control" placeholder="Email" formControlName="email"></div>
                                         <div *ngIf="addingUserForm.get('email').invalid && addingUserForm.get('email').touched" class="invalid-feedback display-component">
                                           <div *ngIf="addingUserForm.get('email').errors.required">Email is required!</div>
                                           <div *ngIf="addingUserForm.get('email').errors.email">Email is invalid!</div>
@@ -108,7 +109,7 @@
                                     <div class="form-group d-flex justify-content-between">
                                       <div class="input-group mr-3">
                                         <div class="w-100">
-                                          <select class="form-control" placeholder="Role" formControlName="role" [(ngModel)]="userToAdd.role" #role required>
+                                          <select class="form-control" placeholder="Role" formControlName="role" #role required>
                                             <option value="null" disabled>Select Role...</option>
                                             <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
                                           </select>
@@ -119,7 +120,7 @@
                                       </div>
 
                                       <div class="input-group">
-                                        <div class="w-100"><select class="form-control" placeholder="Gender" formControlName="gender" [(ngModel)]="userToAdd.gender">
+                                        <div class="w-100"><select class="form-control" placeholder="Gender" formControlName="gender">
                                             <option value="null" disabled>Select Gender...</option>
                                             <option *ngFor="let gender of genders" [value]="gender">{{ gender }}</option>
                                           </select>
@@ -132,14 +133,14 @@
 
                                     <div class="form-group d-flex justify-content-between">
                                       <div class="input-group mr-3">
-                                        <div class="w-100"><input type="text" class="form-control" placeholder="Position" formControlName="jobTitle" [(ngModel)]="userToAdd.jobTitle"></div>
+                                        <div class="w-100"><input type="text" class="form-control" placeholder="Position" formControlName="jobTitle"></div>
                                         <div *ngIf="addingUserForm.get('jobTitle').invalid && addingUserForm.get('jobTitle').touched" class="invalid-feedback display-component">
                                           <div *ngIf="addingUserForm.get('jobTitle').errors.required">Position is required!</div>
                                         </div>  
                                       </div>
 
                                       <div class="input-group">
-                                        <div class="w-100"><input type="text" class="form-control" placeholder="Phone Number" formControlName="phoneNumber" [(ngModel)]="userToAdd.phoneNumber"></div>
+                                        <div class="w-100"><input type="text" class="form-control" placeholder="Phone Number" formControlName="phoneNumber"></div>
                                         <div *ngIf="addingUserForm.get('phoneNumber').invalid && addingUserForm.get('phoneNumber').touched" class="invalid-feedback display-component">
                                           <div *ngIf="addingUserForm.get('phoneNumber').errors.required">Phone number is required!</div>
                                         </div>  
@@ -198,10 +199,14 @@
                       <td>
                         <div class="d-flex">
                           <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-help p-button-outlined mr-1" (click)="specialOpen(editUser, user)"></button>
-                          <button *ngIf="user.enabled" pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-danger p-button-outlined mr-1" (click)="ableOrDisableUser(user)"></button> 
-                          <button *ngIf="!user.enabled" pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-success p-button-outlined mr-1" (click)="ableOrDisableUser(user)"></button> 
+                          <button *ngIf="user.enabled" pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-danger p-button-outlined mr-1" (click)="ableOrDisableUser(user)"></button>
+                          <button *ngIf="!user.enabled" pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-success p-button-outlined mr-1" (click)="ableOrDisableUser(user)"></button>
                           <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined mr-1" (click)="deleteUser(user.id)"></button> 
-                          <button pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-secondary p-button-outlined" placement="left" ngbTooltip="last login here"></button> 
+                          <button pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-secondary p-button-outlined" placement="left" 
+                          ngbTooltip="
+                            Created At: {{ user.createdAt | date: 'dd/MM/yyyy' }}
+                            Updated At: {{ user.updatedAt | date: 'dd/MM/yyyy' }}
+                          "></button> 
                         </div>
                       </td>
                     </tr>
@@ -214,64 +219,85 @@
                               <div class="text-muted text-center">Editing user</div>
                             </div>
                             <div class="card-body px-lg-5 py-lg-3">
-                              <p>The fields with <i class="ni ni-tag"></i> are required!</p>
+                              <p>All the fields are required!</p>
                               <form role="form" [formGroup]="editingUserForm">
                                 <div class="form-group d-flex" style="width: 49%;">
-                                  <input type="text" placeholder="User Reference" class="form-control mr-2 bg-white" disabled="" formControlName="userRef" [(ngModel)]="userToModify.userRef" style="text-align: center;">
+                                  <input type="text" placeholder="User Reference" class="form-control mr-2 bg-white" disabled="" formControlName="userRef" style="text-align: center;">
                                   <button class="btn btn-icon btn-2 btn-outline-default" type="button" (click)="generateUserReference()">
                                     <span class="btn-inner--icon"><i class="ni ni-atom"></i></span>
                                   </button>
                                 </div>
-                    
+
                                 <div class="form-group d-flex justify-content-between">
-                                  <div class="input-group">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="ni ni-tag"></i></span>
+                                  <div class="input-group mr-3">
+                                    <div class="w-100"><input type="text" class="form-control" placeholder="First Name" formControlName="firstName"></div>
+                                    <div *ngIf="editingUserForm.get('firstName').invalid && editingUserForm.get('firstName').touched" class="invalid-feedback display-component">
+                                      <div *ngIf="editingUserForm.get('firstName').errors.required">First Name is required!</div>
+                                      <div *ngIf="editingUserForm.get('firstName').errors.pattern">First Name should contain only characters!</div>
                                     </div>
-                                    <input type="text" class="form-control mr-3" placeholder="First Name" formControlName="firstName" [(ngModel)]="userToModify.firstName">
                                   </div>
-                    
+
                                   <div class="input-group">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="ni ni-tag"></i></span>
+                                    <div class="w-100"><input type="text" class="form-control" placeholder="Last Name" formControlName="lastName"></div>
+                                    <div *ngIf="editingUserForm.get('lastName').invalid && editingUserForm.get('lastName').touched" class="invalid-feedback display-component">
+                                      <div *ngIf="editingUserForm.get('lastName').errors.required">Last Name is required!</div>
+                                      <div *ngIf="editingUserForm.get('lastName').errors.pattern">Last Name should contain only characters!</div>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Last Name" formControlName="lastName" [(ngModel)]="userToModify.lastName">
                                   </div>
                                 </div>
-                    
+
                                 <div class="form-group d-flex justify-content-between">
                                   <div class="input-group">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="ni ni-tag"></i></span>
+                                    <div class="w-100"><input type="text" class="form-control" placeholder="Email" formControlName="email"></div>
+                                    <div *ngIf="editingUserForm.get('email').invalid && editingUserForm.get('email').touched" class="invalid-feedback display-component">
+                                      <div *ngIf="editingUserForm.get('email').errors.required">Email is required!</div>
+                                      <div *ngIf="editingUserForm.get('email').errors.email">Email is invalid!</div>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="Email" formControlName="email" [(ngModel)]="userToModify.email">
-                                  </div>                                      
+                                  </div>                                
                                 </div>
-                    
+
                                 <div class="form-group d-flex justify-content-between">
-                                  <div class="input-group">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="ni ni-tag"></i></span>
+                                  <div class="input-group mr-3">
+                                    <div class="w-100">
+                                      <select class="form-control" placeholder="Role" formControlName="role" #role required>
+                                        <option value="null" disabled>Select Role...</option>
+                                        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                                      </select>
                                     </div>
-                                    <select class="form-control mr-3" placeholder="Role" formControlName="role" [(ngModel)]="userToModify.role" #role required>
-                                      <option value="null" disabled>Select Role...</option>
-                                      <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
-                                    </select>
+                                    <div *ngIf="editingUserForm.get('role').invalid && editingUserForm.get('role').touched" class="invalid-feedback display-component">
+                                      <div *ngIf="editingUserForm.get('role').errors.required">Role is required!</div>
+                                    </div>  
                                   </div>
-                    
-                                  <select class="form-control" placeholder="Gender" formControlName="gender" [(ngModel)]="userToModify.gender">
-                                    <option value="null" disabled>Select Gender...</option>
-                                    <option *ngFor="let gender of genders" [value]="gender">{{ gender }}</option>
-                                  </select>
+
+                                  <div class="input-group">
+                                    <div class="w-100"><select class="form-control" placeholder="Gender" formControlName="gender">
+                                        <option value="null" disabled>Select Gender...</option>
+                                        <option *ngFor="let gender of genders" [value]="gender">{{ gender }}</option>
+                                      </select>
+                                    </div>
+                                    <div *ngIf="editingUserForm.get('gender').invalid && editingUserForm.get('gender').touched" class="invalid-feedback display-component">
+                                      <div *ngIf="editingUserForm.get('gender').errors.required">Gender is required!</div>
+                                    </div>  
+                                  </div>
                                 </div>
-                    
+
                                 <div class="form-group d-flex justify-content-between">
-                                  <input type="text" class="form-control mr-3" placeholder="Position" formControlName="jobTitle" [(ngModel)]="userToModify.jobTitle">
-                                  <input type="text" class="form-control" placeholder="Phone Number" formControlName="phoneNumber" [(ngModel)]="userToModify.phoneNumber">
+                                  <div class="input-group mr-3">
+                                    <div class="w-100"><input type="text" class="form-control" placeholder="Position" formControlName="jobTitle"></div>
+                                    <div *ngIf="editingUserForm.get('jobTitle').invalid && editingUserForm.get('jobTitle').touched" class="invalid-feedback display-component">
+                                      <div *ngIf="editingUserForm.get('jobTitle').errors.required">Position is required!</div>
+                                    </div>  
+                                  </div>
+
+                                  <div class="input-group">
+                                    <div class="w-100"><input type="text" class="form-control" placeholder="Phone Number" formControlName="phoneNumber"></div>
+                                    <div *ngIf="editingUserForm.get('phoneNumber').invalid && editingUserForm.get('phoneNumber').touched" class="invalid-feedback display-component">
+                                      <div *ngIf="editingUserForm.get('phoneNumber').errors.required">Phone number is required!</div>
+                                    </div>  
+                                  </div>
                                 </div>
-                    
+
                                 <div class="text-center">
-                                  <button pButton type="button" class="p-button-secondary my-4 mr-2" (click)="closeModal()">Cancel</button>
                                   <button pButton type="button" class="p-button-success my-4" (click)="edit()" [disabled]="editingUserForm.invalid">Edit User</button>
                                 </div>
                               </form>

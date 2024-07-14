@@ -11,13 +11,13 @@ export const connectUserFailure = createAction('[UserEffects] connectUserFailure
 
 export const disconnectUser = createAction('[NavBarComponent] disconnect');
 
+export const getAllUsers = createAction('[UserEffects] getAllUsers');
+
 export const getAllUsersSuccess = createAction('[UserEffects] getAllUsersSuccess', props<{ users: User[] }>());
 
 export const getAllUsersFailure = createAction('[UserEffects] getAllUsersFailure', props<{ error: any }>());
 
 export const addUser = createAction('[DashboardComponent] addUser', props<{ user: User }>());
-
-export const addUserSuccess = createAction('[UserEffects] addUserSuccess', props<{ user: User }>());
 
 export const addUserFailure = createAction('[UserEffects] addUserFailure', props<{ error: any }>());
 
@@ -35,12 +35,8 @@ export const resetPasswordFailure = createAction('[UserEffects] resetPasswordFai
 
 export const updateUser = createAction('[DashboardComponent] updateUser', props<{ user: User }>());
 
-export  const updateUserSuccess = createAction('[UserEffects] updateUserSuccess', props<{ message: string, user: User }>());
-
 export const updateUserFailure = createAction('[UserEffects] updateUserFailure', props<{ error: any }>());
 
 export const deleteUser = createAction('[DashboardComponent] deleteUser', props<{ userId: number }>());
-
-export const deleteUserSuccess = createAction('[UserEffects] deleteUserSuccess', props<{ userId: number }>());
 
 export const deleteUserFailure = createAction('[UserEffects] deleteUserFailure', props<{ error: any }>());

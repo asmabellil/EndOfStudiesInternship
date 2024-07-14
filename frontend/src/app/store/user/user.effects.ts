@@ -5,10 +5,10 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 import { JwtPayload, jwtDecode } from "jwt-decode";
 import { MessageService } from "primeng/api";
-import { catchError, filter, map, mergeMap, of, take, tap, withLatestFrom } from "rxjs";
+import { catchError, filter, from, map, mergeMap, of, tap, withLatestFrom } from "rxjs";
 import { UserService } from "src/app/services/user.service";
 import * as UserActions from './user.actions';
-import { isUserConnected } from "./user.selector";
+import { isUserConnected, selectUserRole } from "./user.selector";
 
 @Injectable()
 export class UserEffects {
@@ -25,20 +25,18 @@ export class UserEffects {
     ofType(UserActions.connectUser),
     mergeMap((action) =>
       this.userService.connect(action.email, action.password).pipe(
-        take(1),
         mergeMap((connectResult) =>
           {
             const decodedToken = jwtDecode<JwtPayload>(connectResult.token);
             return this.userService.getUser(decodedToken['userId']).pipe(
-              take(1),
-              map((getUserRes) => {
+              mergeMap((getUserRes) => {
                 decodedToken['role'] === 'Admin' ? this.router.navigate(['admin/dashboard']) : this.router.navigate(['employee/home']);
                 this.messageService.add({severity:'success', summary:'Operation Succeed', detail: 'Welcome to dashboard!'});
-                return UserActions.connectUserSuccess({ token: connectResult.token, decodedToken: decodedToken, user: getUserRes.user });
-              }),
-              catchError((error) => {
-                this.messageService.add({severity:'error', summary:'Operation Failed', detail: error.error.error ? error.error.error : error.statusText});
-                return of(UserActions.connectUserFailure({ error }))
+
+                return from([
+                  UserActions.connectUserSuccess({ token: connectResult.token, decodedToken: decodedToken, user: getUserRes.user }),
+                  UserActions.getAllUsers()
+                ])
               })
             )
           }
@@ -48,25 +46,19 @@ export class UserEffects {
           return of(UserActions.connectUserFailure({ error }))
         })
       )
-    ),
-    catchError((error) => {
-      this.messageService.add({severity:'error', summary:'Operation Failed', detail: error.error.error ? error.error.error : error.statusText});
-      return of(UserActions.connectUserFailure({ error }))
-    })
+    )
   ));
 
   getAllUsers$ = createEffect(() => this.actions$.pipe(
-    ofType(UserActions.connectUserSuccess),
-    withLatestFrom(this.store.select(isUserConnected)),
-    filter(([action, isUserConnected]) => action.decodedToken['role'] === 'Admin' && isUserConnected),
-    take(1),
+    ofType(UserActions.getAllUsers),
+    withLatestFrom(this.store.select(isUserConnected), this.store.select(selectUserRole)),
+    filter(([_, isUserConnected, role]) => role === 'Admin' && isUserConnected),
     mergeMap(() =>
       this.userService.getAllUsers().pipe(
         map((result) => UserActions.getAllUsersSuccess({ users: result.users })),
         catchError((error) => of(UserActions.getAllUsersFailure({ error })))
       )
-    ),
-    catchError((error) => of(UserActions.getAllUsersFailure({ error })))
+    )
   ));
 
   disconnectUser$ = createEffect(() => this.actions$.pipe(
@@ -84,18 +76,15 @@ export class UserEffects {
         map((addUserRes) => {
           this.modalService.dismissAll();
           this.messageService.add({severity:'success', summary:'Operation Succeed', detail: 'The user has been added successfully'});
-          return UserActions.addUserSuccess({ user: addUserRes.user })
+
+          return UserActions.getAllUsers()
         }),
         catchError((error) => {
           this.messageService.add({severity:'error', summary:'Operation Failed', detail: error.error.error ? error.error.error : error.statusText});
           return of(UserActions.addUserFailure({ error }));
         })
       )
-    ),
-    catchError((error) => {
-      this.messageService.add({severity:'error', summary:'Operation Failed', detail: error.error.error ? error.error.error : error.statusText});
-      return of(UserActions.addUserFailure({ error }));
-    })
+    )
   ));
 
   sendForgotPassword$ = createEffect(() => this.actions$.pipe(
@@ -139,18 +128,15 @@ export class UserEffects {
         map((result) => {
           this.modalService.dismissAll();
           this.messageService.add({severity:'success', summary:'Operation Succeed', detail: 'The user has been updated successfully!'});
-          return UserActions.updateUserSuccess({ message: result.message, user: action.user })
+          
+          return UserActions.getAllUsers();
         }),
         catchError((error) => {
           this.messageService.add({severity:'error', summary:'Operation Failed', detail: error.error.error ? error.error.error : error.statusText});
           return of(UserActions.updateUserFailure({ error }))
         })
       )
-    ),
-    catchError((error) => {
-      this.messageService.add({severity:'error', summary:'Operation Failed', detail: error.error.error ? error.error.error : error.statusText});
-      return of(UserActions.updateUserFailure({ error }))
-    })
+    )
   ));
 
   deleteUser$ = createEffect(() => this.actions$.pipe(
@@ -160,17 +146,14 @@ export class UserEffects {
         map((result) => {
           this.modalService.dismissAll();
           this.messageService.add({severity:'success', summary:'Operation Succeed', detail: 'The user has been deleted successfully!'});
-          return UserActions.deleteUserSuccess({ userId: action.userId})
+
+          return UserActions.getAllUsers()
         }),
         catchError((error) => {
           this.messageService.add({severity:'error', summary:'Operation Failed', detail: error.error.error ? error.error.error : error.statusText});
           return of(UserActions.deleteUserFailure({ error }))
         })
       )
-    ),
-    catchError((error) => {
-      this.messageService.add({severity:'error', summary:'Operation Failed', detail: error.error.error ? error.error.error : error.statusText});
-      return of(UserActions.deleteUserFailure({ error }))
-    })
+    )
   ));
 }

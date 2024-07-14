@@ -19,7 +19,7 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.resetPasswordForm = new FormGroup({
-      password: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required, Validators.pattern('^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$')]),
       confirmPassword: new FormControl('', [Validators.required])
     });
 
@@ -28,7 +28,6 @@ export class ResetPasswordComponent implements OnInit {
 
   get password(){
     return this.resetPasswordForm.get('password').value;
-  
   }
 
   passwordsAreEqual() {
@@ -38,5 +37,4 @@ export class ResetPasswordComponent implements OnInit {
   resetPassword() {
     this.store.dispatch(resetPassword({ password: this.password, token: this.resetPasswordToken }));
   }
-
 }

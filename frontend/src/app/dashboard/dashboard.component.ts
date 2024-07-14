@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
-import { Observable, filter, map } from 'rxjs';
+import { Observable, filter, map, withLatestFrom } from 'rxjs';
 import { Gender } from '../models/enums/Gender.enum';
 import { Role } from '../models/enums/Role.enum';
 import { User } from '../models/user.model';
 import { AppState } from '../store/app.state';
 import { addUser, deleteUser, updateUser } from '../store/user/user.actions';
-import { selectUsersListRows } from '../store/user/user.selector';
+import { selectCurrentUser, selectUsersListRows } from '../store/user/user.selector';
 import { MessageService } from 'primeng/api';
 
 
@@ -24,8 +24,6 @@ export class DashboardComponent implements OnInit {
 
   usersList$: Observable<User[]>;
   closeResult: string;
-  userToAdd: User;
-  userToModify: User;
   addingUserForm: FormGroup;
   editingUserForm: FormGroup;
   modalRef: NgbModalRef;
@@ -36,49 +34,50 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.roles = Object.values(Role);
     this.genders = Object.values(Gender);
-    
-    this.initiateUserToAdd();
-    this.userToModify = new User();
 
-    this.usersList$ = this.store.select(selectUsersListRows).pipe(
-      map(users => users ? [...users] : [])
-    );
+    this.showUserListDependingOnItsStatus(null);
+    this.initializeAddingUserForm();
+  }
 
+  initializeAddingUserForm() {
     this.addingUserForm = new FormGroup({
-      userRef: new FormControl('',[Validators.required]),
+      userRef: new FormControl(this.generateUserReference(),[Validators.required]),
       firstName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
       lastName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      role: new FormControl('', [Validators.required]), 
-      gender: new FormControl('', [Validators.required]), 
+      role: new FormControl(null, [Validators.required]), 
+      gender: new FormControl(null, [Validators.required]), 
       jobTitle: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]), 
       phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^\+?\d{8}$/)]), 
     });
+  }
 
+  initializeEditingUserForm(user: User) {
     this.editingUserForm = new FormGroup({
-      userRef: new FormControl('',[Validators.required]),
-      firstName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
-      lastName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      role: new FormControl('', [Validators.required]),
-      gender: new FormControl('', [Validators.required]), 
-      jobTitle: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]), 
-      phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^\+?\d{8}$/)]), 
+      id: new FormControl(user.id, [Validators.required]),
+      userRef: new FormControl(user.userRef,[Validators.required]),
+      firstName: new FormControl(user.firstName, [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
+      lastName: new FormControl(user.lastName, [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
+      email: new FormControl(user.email, [Validators.required, Validators.email]),
+      role: new FormControl(user.role, [Validators.required]),
+      gender: new FormControl(user.gender, [Validators.required]), 
+      jobTitle: new FormControl(user.jobTitle, [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]), 
+      phoneNumber: new FormControl(user.phoneNumber, [Validators.required, Validators.pattern(/^\+?\d{8}$/)]),
+      enabled: new FormControl(user.enabled, [Validators.required])
     });
   }
 
   add(){
-    this.store.dispatch(addUser({user: this.userToAdd}));
-    this.initiateUserToAdd();
+    this.store.dispatch(addUser({user: this.addingUserForm.value as User}));
   }
 
   edit(){
-    this.store.dispatch(updateUser({user: this.userToModify}));
-    this.userToModify = new User();
+    this.store.dispatch(updateUser({user: this.editingUserForm.value as User}));
   }
 
   ableOrDisableUser(user: User){
-    this.store.dispatch(updateUser({user: {...user, enabled: !user.enabled}}));
+    const { createdAt, updatedAt, ...restUser } = user;
+    this.store.dispatch(updateUser({user: {...restUser as User, enabled: !user.enabled}}));
   }
 
   open(content) {
@@ -88,12 +87,12 @@ export class DashboardComponent implements OnInit {
         this.closeResult = 'Closed with: $result';
     }, (reason) => {
         this.closeResult = 'Dismissed $this.getDismissReason(reason)';
-        this.initiateUserToAdd();
+        this.initializeAddingUserForm();
     });
   }
 
   specialOpen(content, user: User) {
-    this.setUserToModify(user);
+    this.initializeEditingUserForm(user);
     this.open(content);
   }
 
@@ -104,32 +103,13 @@ export class DashboardComponent implements OnInit {
   }
 
   generateUserReference() {
-    this.userToAdd.userRef = 'USR-' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0').toString();
-  }
-
-  initiateUserToAdd() {
-    this.userToAdd = new User();
-    this.userToAdd.role = null;
-    this.userToAdd.gender = null;
-    this.generateUserReference();
-  }
-  
-  setUserToModify(user: User) {
-    this.userToModify.id = user.id;
-    this.userToModify.userRef = user.userRef;
-    this.userToModify.firstName = user.firstName;
-    this.userToModify.lastName = user.lastName;
-    this.userToModify.email = user.email;
-    this.userToModify.role = user.role;
-    this.userToModify.gender = user.gender;
-    this.userToModify.jobTitle = user.jobTitle;
-    this.userToModify.phoneNumber = user.phoneNumber;
+    return 'USR-' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0').toString();
   }
 
   showUserListDependingOnItsStatus(enabled: boolean) {
     this.usersList$ = this.store.select(selectUsersListRows).pipe(
-      // map(users => !!enabled ? users.filter(user => user.enabled === enabled) : users ? [...users] : [])
-      map(users => users ? enabled !== null ? users.filter(user => user.enabled === enabled) : [...users] : [])
+      withLatestFrom(this.store.select(selectCurrentUser)),
+      map(([users, user]) => users ? enabled !== null ? users.filter(user => user.enabled === enabled) : [...users.filter(u => u.id !== user.id)] : [])
     );
   }
 
@@ -138,13 +118,13 @@ export class DashboardComponent implements OnInit {
     this.messageService.clear();
 }
 
-onReject() {
-    this.messageService.clear('c');
-}
+  onReject() {
+      this.messageService.clear('delete');
+  }
 
   deleteUser(userId){
     this.userIdToDelete = userId;
     this.messageService.clear();
-    this.messageService.add({key: 'c', sticky: true, severity:'custom', summary:'Do you confirm the delete of the user?', detail:'Confirm to proceed'});
+    this.messageService.add({key: 'delete', sticky: true, severity:'custom', summary:'Do you confirm the delete of the user?', detail:'Confirm to proceed'});
   }
 }
