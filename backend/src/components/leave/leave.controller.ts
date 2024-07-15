@@ -9,7 +9,7 @@ const createLeave = async (req: Request, res: Response) => {
     const result = await leaveService.create(leave);
     res.status(result.status);
     if (result.leave) {
-      return res.send({ message: result.message, leave });
+      return res.send({ message: result.message, leave: result.leave });
     }
     return res.send({ message: result.message });
   } catch (error) {

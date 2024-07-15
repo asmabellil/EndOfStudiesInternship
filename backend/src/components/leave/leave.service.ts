@@ -23,7 +23,7 @@ const create = async (leave: ILeave, options: any = {}): Promise<any> => {
     return {
       status: 200,
       message: 'Leave was created',
-      leave: newLeave.DataValues,
+      leave: newLeave,
     };
   } catch (err) {
     logger.error(`Leave create err: %O`, err.message);
