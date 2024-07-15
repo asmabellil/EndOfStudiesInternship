@@ -5,7 +5,7 @@ import {
   resetPassword,
   verifyResetPasswordLink,
   updatePassword,
-  loginWithGmail
+  loginWithGmail,
 } from '@components/authentification/auth.service';
 import jwt from 'jsonwebtoken';
 import consts from '@config/consts';
@@ -16,7 +16,9 @@ const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const token = await authentification(email, password);
     if (!token) {
-      return res.status(401).json({ error: 'Incorrect e-mail address or password' });
+      return res
+        .status(401)
+        .json({ error: 'Incorrect e-mail address or password' });
     }
 
     res.status(httpStatus.CREATED).json({ token });
@@ -27,18 +29,18 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-// Login
 const loginViaGmail = async (req: Request, res: Response) => {
   try {
-    const token = await loginWithGmail(req.body);
-    if (!token) {
-      return res.status(401).json({ error: 'Incorrect e-mail address or password' });
-    }
+    const { email } = req.body;
+    const result = await loginWithGmail(email);
 
-    res.status(httpStatus.CREATED).json({ token });
+    if (result.status === 200) {
+      return res.status(result.status).json({ token: result.token });
+    }
+    return res.status(result.status).json({ message: result.message });
   } catch (error) {
-    res.status(500).json({
-      error: error.message || 'An error has occurred during connection',
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: error.message || 'An error has occurred during connection',
     });
   }
 };
@@ -46,10 +48,10 @@ const loginViaGmail = async (req: Request, res: Response) => {
 const resetPasswordUser = async (req, res) => {
   try {
     const { email } = req.body;
-    const result = await resetPassword(email, consts.MAIN_COLOR, consts.SECOND_COLOR);
+    const result = await resetPassword(email);
     res.status(result.status).json({ message: result.message });
   } catch (error) {
-    res.status(500).json({ error: "An error has occurred" });
+    res.status(500).json({ error: 'An error has occurred' });
   }
 };
 
@@ -59,7 +61,7 @@ const handlePasswordResetLink = async (req, res) => {
     const result = await verifyResetPasswordLink(token);
     return res.status(result.status).json({ message: result.message });
   } catch (error) {
-    res.status(500).json({ error: "An error has occurred" });
+    res.status(500).json({ error: 'An error has occurred' });
   }
 };
 
@@ -79,4 +81,10 @@ const changePassword = async (req: Request, res: Response) => {
   }
 };
 
-export { login, resetPasswordUser, handlePasswordResetLink, changePassword, loginViaGmail };
+export {
+  login,
+  resetPasswordUser,
+  handlePasswordResetLink,
+  changePassword,
+  loginViaGmail,
+};

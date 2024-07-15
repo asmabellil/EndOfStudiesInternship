@@ -29,7 +29,7 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
       context: { firstName: user.firstName, password }, // Pass data to the template
     };
     // Send email with password reset link
-    //await sendMail(mailOptions);
+    await sendMail(mailOptions);
 
     const newUser: any = await UserModel.create(
       {

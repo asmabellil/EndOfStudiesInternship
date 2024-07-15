@@ -24,7 +24,7 @@ app.post('/updatePassword', [validation(loginValidation.changePasswordValidation
   authController.changePassword(req, res);
 });
 
-app.post('/loginViaGmail', [validation(createUserValidation)], async (req, res) => {
+app.post('/loginViaGmail', async (req, res) => {
   authController.loginViaGmail(req, res);
 });
 

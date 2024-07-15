@@ -43,32 +43,25 @@ const authentification = async (
   }
 };
 
-const loginWithGmail = async (user: any): Promise<UserModel | any> => {
+const loginWithGmail = async (email: string): Promise<any> => {
   try {
-    // Recherche de l'utilisateur dans la base de données
-    const userFound = await UserModel.findOne({ where: { email: user.email } });
+    // Search for the user in the database
+    const userFound = await UserModel.findOne({ where: { email } });
     if (userFound) {
-      // Génération du jeton JWT
+      // Generate JWT token
       const token = jwt.sign(
         { userId: userFound.id, role: userFound.role },
         consts.JWT_SECRET,
       );
-      return token;
+      return { status: 200, message: 'User found and connected', token };
     }
-    const newUser = await create(user);
-    const token = jwt.sign(
-      {
-        userId: newUser.user.dataValues.id,
-        role: newUser.user.dataValues.role,
-      },
-      consts.JWT_SECRET,
-    );
-    return token;
+    return { status: 404, message: 'User does not have an account.' };
   } catch (error) {
     logger.error(error);
-    throw new Error('An error has occurred during connection avec google');
+    return { status: 400, message: 'An error has occurred during connection with Google' };
   }
 };
+
 
 // Function to generate reset token
 const generateResetToken = (id) => {
@@ -78,7 +71,7 @@ const generateResetToken = (id) => {
 };
 
 // Function to handle reset password request
-const resetPassword = async (email, primaryColor, secondaryColor) => {
+const resetPassword = async (email) => {
   try {
     const user = await UserModel.findOne({ where: { email } });
     if (!user) return { status: 400, message: 'The user was not found' };
@@ -91,25 +84,22 @@ const resetPassword = async (email, primaryColor, secondaryColor) => {
     await user.save();
 
     const link = `${consts.FRONT_END_URL}/#/auth/reset-password/${token}`;
-
     const mailOptions = {
       to: user.email,
       subject: 'Password Reset Request',
       template: 'passwordReset',
       context: { firstName: user.firstName, link }, // Pass data to the template
     };
-    
+
     // Send email with reset password link
-    //await sendMail(mailOptions);
-    
+    await sendMail(mailOptions);
 
     return {
       status: 200,
-      message:
-        'Password reset link sent to your e-mail address',
+      message: 'Password reset link sent to your e-mail address',
     };
   } catch (error) {
-    throw new Error(error.message || "An error has occurred");
+    throw new Error(error.message || 'An error has occurred');
   }
 };
 
@@ -143,7 +133,7 @@ const verifyResetPasswordLink = async (
     if (!user) {
       return {
         status: 401,
-        message: "The token does not correspond to the user",
+        message: 'The token does not correspond to the user',
       };
     }
 
@@ -151,7 +141,7 @@ const verifyResetPasswordLink = async (
     if (user.dataValues.resetToken !== token) {
       return {
         status: 401,
-        message: "The token does not correspond to the user",
+        message: 'The token does not correspond to the user',
       };
     }
 
