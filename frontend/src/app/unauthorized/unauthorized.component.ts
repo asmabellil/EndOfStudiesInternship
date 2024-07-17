@@ -4,6 +4,7 @@ import { selectUserRole } from '../store/user/user.selector';
 import { Observable, tap } from 'rxjs';
 import { Role } from '../models/enums/Role.enum';
 import { Router } from '@angular/router';
+import { AppState } from '../store/app.state';
 
 @Component({
   selector: 'app-unauthorized',
@@ -12,15 +13,15 @@ import { Router } from '@angular/router';
 })
 export class UnauthorizedComponent implements OnInit {
 
-  homePage$: Observable<string>;
-  constructor(private store: Store, private router: Router) { }
+  userRole$: Observable<string>;
+  constructor(private store: Store<AppState>, private router: Router) { }
 
   ngOnInit(): void {
-    this.homePage$ = this.store.select(selectUserRole);
+    this.userRole$ = this.store.select(selectUserRole);
   }
 
   routeToHomePage(){
-    this.homePage$.subscribe((role) => {
+    this.userRole$.subscribe((role) => {
       if(role === Role.ADMIN){
         this.router.navigate(['/admin/dashboard']);
       } else if(role === Role.EMPLOYEE){

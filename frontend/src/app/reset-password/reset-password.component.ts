@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { resetPassword } from '../store/user/user.actions';
+import { AppState } from '../store/app.state';
 
 @Component({
   selector: 'app-reset-password',
@@ -15,7 +16,7 @@ export class ResetPasswordComponent implements OnInit {
   focus1: boolean;
   resetPasswordToken: string;
 
-  constructor(private activatedRoute: ActivatedRoute, private store: Store) { }
+  constructor(private activatedRoute: ActivatedRoute, private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.resetPasswordForm = new FormGroup({

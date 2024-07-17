@@ -73,7 +73,7 @@
                                   <form role="form" [formGroup]="addingUserForm">
                                     <div class="form-group d-flex" style="width: 49%;">
                                       <input type="text" placeholder="User Reference" class="form-control mr-2 bg-white" disabled="" formControlName="userRef" style="text-align: center;">
-                                      <button class="btn btn-icon btn-2 btn-outline-default" type="button" (click)="generateUserReference()">
+                                      <button class="btn btn-icon btn-2 btn-outline-default" type="button" (click)="addingUserForm.get('userRef').setValue(generateUserReference())">
                                         <span class="btn-inner--icon"><i class="ni ni-atom"></i></span>
                                       </button>
                                     </div>
@@ -143,6 +143,7 @@
                                         <div class="w-100"><input type="text" class="form-control" placeholder="Phone Number" formControlName="phoneNumber"></div>
                                         <div *ngIf="addingUserForm.get('phoneNumber').invalid && addingUserForm.get('phoneNumber').touched" class="invalid-feedback display-component">
                                           <div *ngIf="addingUserForm.get('phoneNumber').errors.required">Phone number is required!</div>
+                                          <div *ngIf="addingUserForm.get('phoneNumber').errors.pattern">Phone number is invalid!</div>
                                         </div>  
                                       </div>
                                     </div>

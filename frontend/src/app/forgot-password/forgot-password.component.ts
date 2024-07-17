@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { sendForgotPassword } from '../store/user/user.actions';
+import { AppState } from '../store/app.state';
 
 @Component({
   selector: 'app-forgot-password',
@@ -13,7 +14,7 @@ export class ForgotPasswordComponent implements OnInit {
   focus: boolean;
   focus1: boolean;
 
-  constructor(private store: Store) { }
+  constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
     this.forgotPasswordForm = new FormGroup({
@@ -21,8 +22,7 @@ export class ForgotPasswordComponent implements OnInit {
     });
   }
 
-  resetPassword() {
+  forgotPassword() {
     this.store.dispatch(sendForgotPassword({ email: this.forgotPasswordForm.value.email }));
   }
-
 }
