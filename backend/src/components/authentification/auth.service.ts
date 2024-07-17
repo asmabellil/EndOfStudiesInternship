@@ -89,7 +89,7 @@ const resetPassword = async (email) => {
     (user as any).resetToken = token;
     await user.save();
 
-    const link = `${consts.FRONT_END_URL}/#/auth/reset-password/${token}`;
+    const link = `${consts.FRONT_END_URL}/auth/reset-password/${token}`;
     const mailOptions = {
       to: user.email,
       subject: 'Password Reset Request',
