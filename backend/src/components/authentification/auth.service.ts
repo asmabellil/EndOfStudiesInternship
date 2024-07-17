@@ -20,7 +20,7 @@ const authentification = async (
     const userFound = await UserModel.findOne({ where: { email } });
     const user = userFound ? (userFound.toJSON() as IUser) : null;
     if (!user) {
-      return null;
+      return { status: 404, message: 'Incorrect e-mail address or password' };
     }
 
     // Vérification du mot de passe
@@ -37,7 +37,7 @@ const authentification = async (
       );
       return { status: 200, message: 'User found and connected', token };
     } else {
-      return { status: 401, error: 'User is disabled. Contact your admin' };
+      return { status: 401, error: 'User is disabled, call your admin!' };
     }
   } catch (error) {
     logger.error(error);

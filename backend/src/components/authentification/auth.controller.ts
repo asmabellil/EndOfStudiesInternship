@@ -14,14 +14,14 @@ import consts from '@config/consts';
 const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const token = await authentification(email, password);
-    if (!token) {
+    const result = await authentification(email, password);
+    if (!result.token) {
       return res
-        .status(401)
-        .json({ error: 'Incorrect e-mail address or password' });
+        .status(result.status)
+        .json({ error: result.message || result.error });
     }
 
-    res.status(httpStatus.CREATED).json({ token });
+    res.status(result.status).json({ token: result.token });
   } catch (error) {
     res.status(500).json({
       error: error.message || 'An error has occurred during connection',
