@@ -18,14 +18,35 @@
               <div class="text-muted text-center mb-3">
                 <small>Sign in with</small>
               </div>
-              <div class="btn-wrapper text-center">
+              <!-- <div class="btn-wrapper text-center">
                 <a href="javascript:void(0)" class="btn btn-neutral btn-icon">
                   <span class="btn-inner--icon">
                     <img src="./assets/img/icons/common/google.svg">
                   </span>
                   <span class="btn-inner--text">Google</span>
                 </a>
+              </div> -->
+              <div class="row justify-content-center">
+                <div
+                  id="g_id_onload"
+                  data-client_id="848639480564-nc7uj3c00iadgeilfadn4rm2r1kkvlg5.apps.googleusercontent.com"
+                  data-context="use"
+                  data-ux_mode="popup"
+                  data-itp_support="true"
+                  data-callback="handleCredentialResponse"
+                ></div>
+                <!-- data-auto-select="true" -->
+                <div
+                  class="g_id_signin"
+                  data-type="standard"
+                  data-shape="pill"
+                  data-theme="filled_blue"
+                  data-text="signin_with"
+                  data-size="large"
+                  data-logo_alignment="left"
+                ></div>
               </div>
+
             </div>
             <div class="card-body px-lg-5 py-lg-5">
               <div class="text-center text-muted mb-4">

@@ -49,6 +49,34 @@ export class UserEffects {
     )
   ));
 
+  connectViaGoogle$ = createEffect(() => this.actions$.pipe(
+    ofType(UserActions.connectUserWithGoogle),
+    mergeMap((action) =>
+      this.userService.connectWithGoogle(action.email).pipe(
+        mergeMap((connectResult) => 
+        {
+          const decodedToken = jwtDecode<JwtPayload>(connectResult.token);
+          return this.userService.getUser(decodedToken['userId']).pipe(
+            mergeMap((getUserRes) => {
+              decodedToken['role'] === 'Admin' ? this.router.navigate(['admin/dashboard']) : this.router.navigate(['employee/home']);
+              this.messageService.add({severity:'success', summary:'Operation Succeed', detail: 'Welcome to dashboard!'});
+
+              return from([
+                UserActions.connectUserSuccess({ token: connectResult.token, decodedToken: decodedToken, user: getUserRes.user }),
+                UserActions.getAllUsers()
+              ])
+            })
+          )
+        }
+        ),
+        catchError((error) => {
+          this.messageService.add({severity:'error', summary:'Operation Failed', detail: error.error.error ? error.error.error : error.statusText});
+          return of(UserActions.connectUserFailure({ error }))
+        })
+      )
+    )
+  ));
+
   getAllUsers$ = createEffect(() => this.actions$.pipe(
     ofType(UserActions.getAllUsers),
     withLatestFrom(this.store.select(isUserConnected), this.store.select(selectUserRole)),

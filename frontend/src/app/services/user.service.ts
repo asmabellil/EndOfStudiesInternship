@@ -21,6 +21,10 @@ export class UserService {
     return this.httpClient.post<{token: string}>(this.USER_BASE_URL + 'login', {'email': email, 'password': password});
   }
 
+  connectWithGoogle(email: string) : Observable<{token: string}>{
+    return this.httpClient.post<{token: string}>(this.USER_BASE_URL + 'loginViaGmail', {'email': email});
+  }
+
   getUser(userId: number): Observable<{message: string, user: User}>{
     return this.httpClient.get<{message: string, user: User}>(this.USER_BASE_URL_API + 'user/' + userId);
   }
