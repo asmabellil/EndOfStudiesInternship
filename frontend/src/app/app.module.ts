@@ -11,6 +11,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SignupComponent } from './signup/signup.component';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -25,19 +26,18 @@ import { LoginComponent } from './login/login.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
+import { rootReducer } from './store/root.reducer';
 import { UserEffects } from './store/user/user.effects';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
-import { rootReducer } from './store/root.reducer';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // primeNg imports
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
-import {ToastModule} from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 
 
 

@@ -1,22 +1,21 @@
-import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
-import { BrowserModule  } from '@angular/platform-browser';
-import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule, Routes } from '@angular/router';
 
-import { HomeComponent } from './home/home.component';
-import { ProfileComponent } from './profile/profile.component';
-import { SignupComponent } from './signup/signup.component';
-import { LandingComponent } from './landing/landing.component';
-import { LoginComponent } from './login/login.component';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import { EmployeeLayoutComponent } from './layouts/employee-layout/employee-layout.component';
-import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthAdminGuard } from './configs/guards/auth-admin.guard';
-import { AuthEmployeeGuard } from './configs/guards/auth-employee.guard';
 import { AuthDisconnectedGuard } from './configs/guards/auth-disconnected.guard';
+import { AuthEmployeeGuard } from './configs/guards/auth-employee.guard';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { HomeComponent } from './home/home.component';
+import { LandingComponent } from './landing/landing.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { EmployeeLayoutComponent } from './layouts/employee-layout/employee-layout.component';
+import { LoginComponent } from './login/login.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 const routes: Routes =[

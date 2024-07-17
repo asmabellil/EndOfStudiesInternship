@@ -38,16 +38,16 @@ export class DashboardComponent implements OnInit {
     this.showUserListDependingOnItsStatus(null);
     this.initializeAddingUserForm();
   }
-
+  
   initializeAddingUserForm() {
     this.addingUserForm = new FormGroup({
       userRef: new FormControl(this.generateUserReference(),[Validators.required]),
-      firstName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
-      lastName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
+      firstName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)]),
+      lastName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)]),
       email: new FormControl('', [Validators.required, Validators.email]),
       role: new FormControl(null, [Validators.required]), 
       gender: new FormControl(null, [Validators.required]), 
-      jobTitle: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]), 
+      jobTitle: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z ]*$/)]), 
       phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^\+?\d{8}$/)]), 
     });
   }
@@ -109,7 +109,7 @@ export class DashboardComponent implements OnInit {
   showUserListDependingOnItsStatus(enabled: boolean) {
     this.usersList$ = this.store.select(selectUsersListRows).pipe(
       withLatestFrom(this.store.select(selectCurrentUser)),
-      map(([users, user]) => users ? enabled !== null ? users.filter(user => user.enabled === enabled) : [...users.filter(u => u.id !== user.id)] : [])
+      map(([users, user]) => users ? enabled !== null ? users.filter(u => u.enabled === enabled && u.id !== user.id) : [...users.filter(u => u.id !== user.id)] : [])
     );
   }
 
