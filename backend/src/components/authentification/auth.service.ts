@@ -26,7 +26,7 @@ const authentification = async (
     // Vérification du mot de passe
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      return null;
+      return { status: 404, message: 'Incorrect e-mail address or password' };
     }
 
     // Génération du jeton JWT
