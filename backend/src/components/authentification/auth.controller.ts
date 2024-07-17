@@ -37,7 +37,7 @@ const loginViaGmail = async (req: Request, res: Response) => {
     if (result.status === 200) {
       return res.status(result.status).json({ token: result.token });
     }
-    return res.status(result.status).json({ message: result.message });
+    return res.status(result.status).json({ error: result.message || result.error });
   } catch (error) {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: error.message || 'An error has occurred during connection',

@@ -10,4 +10,5 @@ export interface IUser {
   phoneNumber: string;
   gender: string;
   role: string;
+  enabled: boolean;
 }

@@ -8,15 +8,13 @@ import consts from '@config/consts';
 import { sendMail } from '@config/mail';
 import AppError from '@core/utils/appError';
 import httpStatus from 'http-status';
-import crypto from 'crypto';
 import verifyPasswordComplexity from '@core/utils/passwordComplexity';
-import { create } from '@components/user/user.service';
 
 // Login
 const authentification = async (
   email: string,
   password: string,
-): Promise<string | null> => {
+): Promise<any | null> => {
   try {
     // Recherche de l'utilisateur dans la base de données
     const userFound = await UserModel.findOne({ where: { email } });
@@ -32,11 +30,15 @@ const authentification = async (
     }
 
     // Génération du jeton JWT
-    const token = jwt.sign(
-      { userId: user.id, role: user.role },
-      consts.JWT_SECRET,
-    );
-    return token;
+    if (user.enabled){
+      const token = jwt.sign(
+        { userId: user.id, role: user.role },
+        consts.JWT_SECRET,
+      );
+      return { status: 200, message: 'User found and connected', token };
+    } else {
+      return { status: 401, error: 'User is disabled. Contact your admin' };
+    }
   } catch (error) {
     logger.error(error);
     throw new Error('An error has occurred during connection');
@@ -49,11 +51,15 @@ const loginWithGmail = async (email: string): Promise<any> => {
     const userFound = await UserModel.findOne({ where: { email } });
     if (userFound) {
       // Generate JWT token
-      const token = jwt.sign(
-        { userId: userFound.id, role: userFound.role },
-        consts.JWT_SECRET,
-      );
-      return { status: 200, message: 'User found and connected', token };
+      if (userFound.enabled){
+        const token = jwt.sign(
+          { userId: userFound.id, role: userFound.role },
+          consts.JWT_SECRET,
+        );
+        return { status: 200, message: 'User found and connected', token };
+      } else {
+        return { status: 401, error: 'User is disabled. Contact your admin' };
+      }
     }
     return { status: 404, message: 'User does not have an account.' };
   } catch (error) {
