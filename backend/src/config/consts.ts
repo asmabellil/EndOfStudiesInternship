@@ -49,7 +49,6 @@ const GENDER = {
 const LEAVE_TYPE = {
   Annual: 'Annual',
   Exceptional: 'Exceptional',
-  Recuperation: 'Recuperation',
 };
 
 const LEAVE_STATUS = {

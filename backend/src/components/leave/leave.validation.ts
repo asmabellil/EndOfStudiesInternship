@@ -4,7 +4,7 @@ import consts from '@config/consts';
 
 const createLeaveValidation: ValidationSchema = {
   body: Joi.object().keys({
-    leaveType: Joi.string().valid(consts.LEAVE_TYPE.Annual, consts.LEAVE_TYPE.Exceptional, consts.LEAVE_TYPE.Recuperation).required().allow(null, ''),
+    leaveType: Joi.string().valid(consts.LEAVE_TYPE.Annual, consts.LEAVE_TYPE.Exceptional).required().allow(null, ''),
     startDate: Joi.string().required().allow(null, ''),
     endDate: Joi.string().required().allow(null, ''),
     startDateSpecification: Joi.string().required().allow(null, ''),
@@ -18,7 +18,7 @@ const createLeaveValidation: ValidationSchema = {
 
 const updateLeaveValidation: ValidationSchema = {
   body: Joi.object().keys({
-    leaveType: Joi.string().valid(consts.LEAVE_TYPE.Annual, consts.LEAVE_TYPE.Exceptional, consts.LEAVE_TYPE.Recuperation).required().allow(null, ''),
+    leaveType: Joi.string().valid(consts.LEAVE_TYPE.Annual, consts.LEAVE_TYPE.Exceptional).required().allow(null, ''),
     startDate: Joi.string().required().allow(null, ''),
     endDate: Joi.string().required().allow(null, ''),
     reason: Joi.string().required().allow(null, ''),

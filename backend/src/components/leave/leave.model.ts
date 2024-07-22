@@ -3,7 +3,11 @@ import { Model, DataTypes } from 'sequelize';
 export default class Leave extends Model {
   static associate(models) {
     // Define associations here
-    Leave.belongsTo(models.User, { foreignKey: 'userId' });
+    Leave.belongsTo(models.User, { 
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   }
 
   public id!: number;
