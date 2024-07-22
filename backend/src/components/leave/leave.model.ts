@@ -8,17 +8,21 @@ export default class Leave extends Model {
 
   public id!: number;
 
-  // public userId!: number;
-
   public leaveType!: string;
 
   public startDate!: Date;
 
   public endDate!: Date;
 
+  public startDateSpecification!: string;
+
+  public endDateSpecification!: string;
+
   public reason!: string;
 
   public status!: string;
+
+  public daysNumber!: number;
 
   public createdAt!: Date;
 
@@ -50,8 +54,16 @@ export const initLeave = (sequelize) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
+      startDateSpecification: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       endDate: {
         type: DataTypes.DATE,
+        allowNull: false,
+      },
+      endDateSpecification: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       reason: {
@@ -61,6 +73,9 @@ export const initLeave = (sequelize) => {
       status: {
         type: DataTypes.STRING,
         defaultValue: 'Pending',
+      },
+      daysNumber: {
+        type: DataTypes.INTEGER,
       },
       rejectionReason: {
         type: DataTypes.STRING,

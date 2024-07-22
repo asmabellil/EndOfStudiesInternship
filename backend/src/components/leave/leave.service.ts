@@ -1,7 +1,6 @@
 /* eslint-disable import/no-import-module-exports */
 import logger from '@core/utils/logger';
 import { ILeave } from '@components/leave/leave.interface';
-import { Op } from 'sequelize';
 import { sendMail } from '@config/mail';
 import Leave from '@components/leave/leave.model';
 import User from '@components/user/user.model';
@@ -15,6 +14,9 @@ const create = async (leave: ILeave, options: any = {}): Promise<any> => {
         endDate: leave.endDate,
         reason: leave.reason,
         status: leave.startDate,
+        daysNumber: leave.daysNumber,
+        startDateSpecification: leave.startDateSpecification,
+        endDateSpecification: leave.endDateSpecification,
         userId: leave.userId,
       },
       options,
@@ -97,10 +99,7 @@ const update = async (leave: any): Promise<any> => {
     const startDate = new Date(leave.startDate);
     const endDate = new Date(leave.endDate);
 
-    console.log(user.email, leave.status);
-    
-
-    if (leave.status === 'Approved') {
+    if (leave.status === 'Valid') {
       const mailOptions = {
         to: user.email,
         subject: 'Leave Request Accepted',
@@ -114,7 +113,7 @@ const update = async (leave: any): Promise<any> => {
         }
       };
       await sendMail(mailOptions);
-    } else if (leave.status === 'Rejected') {
+    } else if (leave.status === 'Invalid') {
       const mailOptions = {
         to: user.email,
         subject: 'Leave Request Declined',

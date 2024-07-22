@@ -47,15 +47,15 @@ const GENDER = {
 };
 
 const LEAVE_TYPE = {
-  Sick: 'Sick',
-  Vacation: 'Vacation',
-  Maternity: 'Maternity',
+  Annual: 'Annual',
+  Exceptional: 'Exceptional',
+  Recuperation: 'Recuperation',
 };
 
 const LEAVE_STATUS = {
   Pending: 'Pending',
-  Approved: 'Approved',
-  Rejected: 'Rejected',
+  Valid: 'Valid',
+  Invalid: 'Invalid',
 };
 
 // Google Config

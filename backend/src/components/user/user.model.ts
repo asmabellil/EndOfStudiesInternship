@@ -57,10 +57,6 @@ export const initUser = (sequelize) => {
       jobTitle: DataTypes.STRING,
       phoneNumber: DataTypes.STRING,
       gender: DataTypes.STRING,
-      // companyId: {
-      //   type: DataTypes.INTEGER,
-      //   allowNull: true,
-      // },
       enabled: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,

@@ -20,6 +20,9 @@ const create = async (user: IUser, options: any = {}): Promise<any> => {
 
     const password = Math.random().toString(36).slice(-8);
 
+    console.log(password);
+    
+
     const hashedPassword = await bcrypt.hash(password.toString(), saltRounds);
 
     const mailOptions = {

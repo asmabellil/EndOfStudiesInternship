@@ -6,4 +6,7 @@ export interface ILeave {
   reason: string;
   status: string;
   userId: number;
+  daysNumber: number;
+  startDateSpecification: string;
+  endDateSpecification: string;
 }
