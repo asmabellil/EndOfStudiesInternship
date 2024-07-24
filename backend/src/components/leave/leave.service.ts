@@ -13,7 +13,7 @@ const create = async (leave: ILeave, options: any = {}): Promise<any> => {
         startDate: leave.startDate,
         endDate: leave.endDate,
         reason: leave.reason,
-        status: leave.startDate,
+        status: leave.status,
         daysNumber: leave.daysNumber,
         startDateSpecification: leave.startDateSpecification,
         endDateSpecification: leave.endDateSpecification,
