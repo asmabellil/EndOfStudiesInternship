@@ -26,6 +26,11 @@ export const isUserConnected = createSelector(
   (userState: UserState) => userState?.isUserConnected
 )
 
+export const selectCurrentUserId = createSelector(
+  selectUserState,
+  (userState: UserState) => userState?.userId
+)
+
 export const selectUserFullName = createSelector(
   selectCurrentUser,
   (user) => user?.firstName + ' ' + user?.lastName

@@ -1,5 +1,6 @@
 import { Gender } from "../models/enums/Gender.enum";
 import { Role } from "../models/enums/Role.enum";
+import { User } from "../models/user.model";
 
 export function convertStringToRole(role: string): Role {
     switch (role) {
@@ -13,4 +14,8 @@ export function convertStringToGender(gender: string): Gender {
         case 'Male': return Gender.MALE;
         case 'Female': return Gender.FEMALE;
     }
+}
+
+export function getUserFullName(user: User){
+    return user.firstName + ' ' + user.lastName;
 }

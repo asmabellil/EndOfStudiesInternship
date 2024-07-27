@@ -17,6 +17,8 @@ import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { EmployeeLeavesComponent } from './employee-leaves/employee-leaves.component';
+import { AdminLeavesComponent } from './admin-leaves/admin-leaves.component';
 
 const routes: Routes =[
     // { path: 'home',             component: HomeComponent },
@@ -34,6 +36,9 @@ const routes: Routes =[
       canActivate: [AuthAdminGuard], 
       children: [
         { path: 'dashboard', component: DashboardComponent },
+        { path: 'all-leaves', component: AdminLeavesComponent},
+        { path: 'leaves', component: EmployeeLeavesComponent}
+
       ],
     },
     {
@@ -42,7 +47,8 @@ const routes: Routes =[
       canActivate: [AuthEmployeeGuard], 
       children: [
         { path: 'profile', component: ProfileComponent },
-        { path: 'home',    component: HomeComponent }
+        { path: 'home',    component: HomeComponent },
+        { path: 'leaves', component: EmployeeLeavesComponent}
       ],
     },
     {
