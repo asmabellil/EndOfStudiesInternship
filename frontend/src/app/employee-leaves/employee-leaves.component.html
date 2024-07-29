@@ -30,7 +30,7 @@
                 <div class="card" *ngIf="{ leaves: leavesList$ | async } as props">              
                   <p-table
                     #dt
-                    [value]="props.leaves"
+                    [value]="props.leaves?.slice()"
                     [rows]="3"
                     [paginator]="true"
                     [globalFilterFields]="[
@@ -184,8 +184,8 @@
                         </td>
                         <td>
                           <div class="d-flex">
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-help p-button-outlined mr-1" (click)="specialOpen(editLeave, leave)"></button>
-                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined mr-1" (click)="deleteLeave(leave.id)"></button> 
+                            <button *ngIf="leave.status === 'Pending'" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-help p-button-outlined mr-1" (click)="specialOpen(editLeave, leave)"></button>
+                            <button *ngIf="leave.status === 'Pending'" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined mr-1" (click)="deleteLeave(leave.id)"></button> 
                             <button *ngIf="leave.rejectionReason !== ''" pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-secondary p-button-outlined" placement="left" ngbTooltip="Rejection Reason: {{ leave.rejectionReason }}"></button> 
                           </div>
                         </td>

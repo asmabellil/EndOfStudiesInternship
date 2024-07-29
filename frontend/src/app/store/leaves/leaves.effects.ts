@@ -70,7 +70,10 @@ export class LeavesEffects {
     mergeMap(([action, userId]) => {
       const {id, ...leave} = action.leave;
     
-      return this.leaveService.updateLeave(leave as Leave, action.leave.id).pipe(
+      return this.leaveService.updateLeave({ 
+        ...leave,
+        daysNumber: moment(action.leave.endDate).diff(action.leave.startDate, 'days') + 1
+      } as Leave, action.leave.id).pipe(
         map(result => {
           this.modalService.dismissAll();
 
