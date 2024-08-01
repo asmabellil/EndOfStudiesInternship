@@ -1,0 +1,45 @@
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1600px;
+    }
+}
+
+.card-width-90{
+    width: 90%;
+}
+
+.parent-div {
+    display: flex;
+}
+
+.left-div, .right-div {
+    flex: 1; /* This makes both divs take up equal space */
+    padding: 10px; /* Optional: Add some padding for better spacing */
+}
+
+:host ::ng-deep {
+    .p-toast-message-custom {
+        background-color: #ffffff;
+        border: solid #6f6f6f9e;
+        border-width: 0 0 0 6px;
+        color: #2c1e30;
+        .p-toast-icon-close {
+            color: #2c1e30;
+        }
+    }
+}
+
+p-calendar {
+    button.p-datepicker-trigger {
+        background: #5e72e4 !important;
+        border: #5e72e4 !important;
+
+        .p-button-label {
+            display: none;
+        }
+    }
+
+    span {
+        width: 100% !important;
+    }
+}

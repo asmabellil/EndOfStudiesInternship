@@ -38,6 +38,10 @@ import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
+import { EmployeeLeavesComponent } from './employee-leaves/employee-leaves.component';
+import { AdminLeavesComponent } from './admin-leaves/admin-leaves.component';
+import { LeavesEffects } from './store/leaves/leaves.effects';
+import { CalendarModule } from 'primeng/calendar';
 
 
 
@@ -56,7 +60,9 @@ import { ToolbarModule } from 'primeng/toolbar';
     EmployeeLayoutComponent,
     AuthLayoutComponent,
     DashboardComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    EmployeeLeavesComponent,
+    AdminLeavesComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +74,7 @@ import { ToolbarModule } from 'primeng/toolbar';
     HttpClientModule,
     ReactiveFormsModule,
     StoreModule.forRoot(rootReducer),
-    EffectsModule.forRoot([UserEffects]),
+    EffectsModule.forRoot([UserEffects, LeavesEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 30 }),
     TableModule,
 		ButtonModule,
@@ -76,7 +82,8 @@ import { ToolbarModule } from 'primeng/toolbar';
     ToolbarModule,
     RippleModule,
     ToastModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CalendarModule
   ],
   providers: [
     MessageService,

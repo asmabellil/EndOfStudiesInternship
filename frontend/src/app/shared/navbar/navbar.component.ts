@@ -3,10 +3,11 @@ import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { Location, PopStateEvent } from '@angular/common';
 import { UserService } from 'src/app/services/user.service';
 import { Store } from '@ngrx/store';
-import { isUserConnected, selectUserFullName } from 'src/app/store/user/user.selector';
+import { isUserConnected, selectUserFullName, selectUserRole } from 'src/app/store/user/user.selector';
 import { Observable, tap } from 'rxjs';
 import { disconnectUser } from 'src/app/store/user/user.actions';
 import { AppState } from 'src/app/store/app.state';
+import { Role } from 'src/app/models/enums/Role.enum';
 
 @Component({
     selector: 'app-navbar',
@@ -20,6 +21,7 @@ export class NavbarComponent implements OnInit {
 
     isUserConnected$: Observable<boolean>;
     userFullName$: Observable<string>;
+    userRole$: Observable<Role>;
 
     constructor(public location: Location, private router: Router, private userService: UserService, private store: Store<AppState>
 ) {
@@ -45,6 +47,7 @@ export class NavbarComponent implements OnInit {
 
      this.isUserConnected$ = this.store.select(isUserConnected);
      this.userFullName$ = this.store.select(selectUserFullName);
+     this.userRole$ = this.store.select(selectUserRole);
     }
 
     isHome() {
@@ -69,5 +72,9 @@ export class NavbarComponent implements OnInit {
 
     logOut() {
         this.store.dispatch(disconnectUser());
+    }
+
+    routeTo(path: string) {
+        this.router.navigate([path]);
     }
 }
