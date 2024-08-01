@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import config from '@config/config';
 import { initUser } from '@components/user/user.model';
 import { initLeave } from '@components/leave/leave.model';
+import { initCheckIn } from '@components/checkIn/checkIn.model';
 
 dotenv.config(); // Load environment variables from .env file
 
@@ -20,10 +21,12 @@ const sequelize = new Sequelize(
 // Initialize models
 const User = initUser(sequelize);
 const Leave = initLeave(sequelize);
+const CheckIn = initCheckIn(sequelize);
 
 const models = {
   User,
   Leave,
+  CheckIn,
 };
 
 // Establish associations
@@ -33,4 +36,4 @@ Object.values(models).forEach((model) => {
   }
 });
 
-export { sequelize, User, Leave };
+export { sequelize, User, Leave, CheckIn };

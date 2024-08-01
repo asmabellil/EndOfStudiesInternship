@@ -4,6 +4,11 @@ export default class User extends Model {
   static associate(models) {
     // Define associations here
     User.hasMany(models.Leave, { foreignKey: 'userId' });
+    User.hasMany(models.CheckIn, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   }
 
   public id!: number;

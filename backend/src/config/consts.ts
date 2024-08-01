@@ -57,6 +57,10 @@ const LEAVE_STATUS = {
   Invalid: 'Invalid',
 };
 
+const CHECKIN_TYPE = {
+  IN: 'IN',
+  OUT: 'OUT',
+}
 // Google Config
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
@@ -104,4 +108,5 @@ export default {
   REDIRECT_URI,
   LEAVE_TYPE,
   LEAVE_STATUS,
+  CHECKIN_TYPE,
 };
