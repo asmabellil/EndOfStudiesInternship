@@ -42,6 +42,9 @@ import { EmployeeLeavesComponent } from './employee-leaves/employee-leaves.compo
 import { AdminLeavesComponent } from './admin-leaves/admin-leaves.component';
 import { LeavesEffects } from './store/leaves/leaves.effects';
 import { CalendarModule } from 'primeng/calendar';
+import { AdminCheckInsComponent } from './admin-check-ins/admin-check-ins.component';
+import { CheckInsEffects } from './store/checkIn/check-in.effects';
+import {FileUploadModule} from 'primeng/fileupload';
 
 
 
@@ -62,7 +65,8 @@ import { CalendarModule } from 'primeng/calendar';
     DashboardComponent,
     UnauthorizedComponent,
     EmployeeLeavesComponent,
-    AdminLeavesComponent
+    AdminLeavesComponent,
+    AdminCheckInsComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +78,7 @@ import { CalendarModule } from 'primeng/calendar';
     HttpClientModule,
     ReactiveFormsModule,
     StoreModule.forRoot(rootReducer),
-    EffectsModule.forRoot([UserEffects, LeavesEffects]),
+    EffectsModule.forRoot([UserEffects, LeavesEffects, CheckInsEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 30 }),
     TableModule,
 		ButtonModule,
@@ -83,7 +87,8 @@ import { CalendarModule } from 'primeng/calendar';
     RippleModule,
     ToastModule,
     BrowserAnimationsModule,
-    CalendarModule
+    CalendarModule,
+    FileUploadModule
   ],
   providers: [
     MessageService,

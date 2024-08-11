@@ -104,7 +104,8 @@
                         <td>
                           <div class="d-flex">
                             <button pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-success p-button-outlined mr-1" (click)="acceptOrReject(leave.leaveDetails, 'Valid')" [disabled]="leave.leaveDetails.status === 'Valid'"></button>
-                            <button pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-danger p-button-outlined" (click)="acceptOrReject(leave.leaveDetails, 'Invalid')" [disabled]="leave.leaveDetails.status === 'Invalid'"></button> 
+                            <button pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-danger p-button-outlined" (click)="acceptOrReject(leave.leaveDetails, 'Invalid')" [disabled]="leave.leaveDetails.status === 'Invalid'"></button>
+                            <button pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-secondary p-button-outlined" placement="left" ngbTooltip="Reason: {{ !!leave.leaveDetails.reason ? leave.leaveDetails.reason : 'NONE' }}"></button> 
                           </div>
                         </td>
                       </tr>

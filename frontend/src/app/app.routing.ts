@@ -19,6 +19,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { EmployeeLeavesComponent } from './employee-leaves/employee-leaves.component';
 import { AdminLeavesComponent } from './admin-leaves/admin-leaves.component';
+import { AdminCheckInsComponent } from './admin-check-ins/admin-check-ins.component';
 
 const routes: Routes =[
     // { path: 'home',             component: HomeComponent },
@@ -37,8 +38,8 @@ const routes: Routes =[
       children: [
         { path: 'dashboard', component: DashboardComponent },
         { path: 'all-leaves', component: AdminLeavesComponent},
-        { path: 'leaves', component: EmployeeLeavesComponent}
-
+        { path: 'leaves', component: EmployeeLeavesComponent},
+        { path: 'pointings', component: AdminCheckInsComponent}
       ],
     },
     {

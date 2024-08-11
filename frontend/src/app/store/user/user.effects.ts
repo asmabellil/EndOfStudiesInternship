@@ -7,6 +7,7 @@ import { JwtPayload, jwtDecode } from "jwt-decode";
 import { MessageService } from "primeng/api";
 import { catchError, filter, from, map, mergeMap, of, tap, withLatestFrom } from "rxjs";
 import { UserService } from "src/app/services/user.service";
+import { changeCheckInSelectedUser } from "../checkIn/check-in.actions";
 import * as UserActions from './user.actions';
 import { isUserConnected, selectUserRole } from "./user.selector";
 
@@ -35,7 +36,8 @@ export class UserEffects {
 
                 return from([
                   UserActions.connectUserSuccess({ token: connectResult.token, decodedToken: decodedToken, user: getUserRes.user }),
-                  UserActions.getAllUsers()
+                  UserActions.getAllUsers(),
+                  changeCheckInSelectedUser({ user: getUserRes.user }),
                 ])
               })
             )
