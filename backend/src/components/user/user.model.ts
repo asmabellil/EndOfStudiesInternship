@@ -9,6 +9,11 @@ export default class User extends Model {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     });
+    User.hasMany(models.Pret, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   }
 
   public id!: number;
