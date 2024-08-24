@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
 import { AppState } from 'src/app/store/app.state';
 import { isUserConnected } from 'src/app/store/user/user.selector';
@@ -18,7 +18,7 @@ export class AuthDisconnectedGuard implements CanActivate {
         if(!isConnected){
           return true;
         } else {
-          this.router.navigate(['/unauthorized']);
+          this.router.navigate(['/auth/unauthorized']);
           return false;
         }
       }));

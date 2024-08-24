@@ -1,0 +1,197 @@
+<div class="header down-side-border bg-dark-blue pb-9 pt-5 pt-md-9">
+    <div class="container-fluid">
+      <div class="header-body">
+      </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--9">
+    <div class="row">
+        <div class="col-xl-12 mb-5 mb-xl-0">
+            <div class="card shadow">
+                <div class="card-body">
+                    <p-toolbar styleClass="mb-4">
+                        <ng-template pTemplate="left">
+                          <h5 class="mb-0">Employees Pointings</h5>
+                        </ng-template>
+                    
+                        <ng-template pTemplate="right">
+      
+                        </ng-template>
+                      </p-toolbar>
+      
+                      <p-toolbar styleClass="mb-4" *ngIf="{ usersList: usersList$ | async, selectedUser: selectedUser$ | async, currentUserRole: currentUserRole$ | async } as props">
+                        <ng-template pTemplate="left">
+                            <div class="mr-2" *ngIf="props.currentUserRole === 'Admin'">
+                              <select class="form-control" placeholder="Users..." (change)="changeSelectedUser($event.target.value, props.usersList)" #users required>
+                                <option *ngFor="let user of props.usersList" [value]="user.id">{{ getUserFullName(user) }}</option>
+                            </select>
+                            </div>
+    
+                            <div class="input-group mr-3">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                </div>
+                                <input class="form-control datepicker" placeholder="Search by date..." ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()" type="text" (ngModelChange)="setPointingsLists($event)" [(ngModel)]="searchDate" />
+                              </div>
+                            </ng-template>
+                      
+                          <ng-template pTemplate="right" *ngIf="props.currentUserRole === 'Admin'">
+                            <label class="custom-file-upload mr-2 mb-0">
+                              <i class="pi pi-upload"></i> Import
+                              <input type="file" class="custom-file-upload" accept=".xls, .xlsx" (change)="onFileUpload($event)"/>
+                            </label>
+      
+                            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-outlined p-button-default p-mr-2" (click)="open(addPointing)"></button>
+                            <!-- add modal -->
+                            <ng-template #addPointing let-c="close" let-d="dismiss">
+                              <div class="modal-content">
+                                <div class="modal-body p-0">
+                                  <div class="card bg-secondary shadow border-0">
+                                    <div class="card-header bg-white ">
+                                      <div class="text-muted text-center">Adding Pointing</div>
+                                    </div>
+                                    <div class="card-body px-lg-5 py-lg-3">
+                                      <p>All fields are required!</p>
+                                      <form [formGroup]="checkInFormGroup">
+                                        <div class="form-group d-flex">
+                                            <div class="input-group">
+                                              <div class="w-100">
+                                                <select class="form-control" formControlName="checkInType">
+                                                  <option value="null" disabled>Select Pointing Type...</option>
+                                                  <option *ngFor="let checkInType of checkInTypes" [value]="checkInType">{{ checkInType }}</option>
+                                                </select>
+                                              </div>
+                                              <div *ngIf="checkInFormGroup.get('checkInType').invalid && checkInFormGroup.get('checkInType').touched" class="invalid-feedback display-component">
+                                                <div *ngIf="checkInFormGroup.get('checkInType').errors.required">Nature is required!</div>
+                                              </div>  
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group d-flex justify-content-between">
+                                            <div class="w-100">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                    </div>
+                                                    <input class="form-control datepicker" placeholder="Select pointing date..." formControlName="checkInDate" ngbDatepicker #d2="ngbDatepicker" (click)="d2.toggle()" type="text" />
+                                                </div>
+                                                <div *ngIf="checkInFormGroup.get('checkInDate').invalid && checkInFormGroup.get('checkInDate').touched" class="invalid-feedback display-component">
+                                                    <div *ngIf="checkInFormGroup.get('checkInDate').errors.required">Pointing Date is required!</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group d-flex flex-column text-center">
+                                            <div class="input-group justify-content-center">
+                                                <ngb-timepicker formControlName="checkInTime" [spinners]="false"></ngb-timepicker>
+                                            </div>
+                                            <div *ngIf="checkInFormGroup.get('checkInTime').invalid && checkInFormGroup.get('checkInTime').touched" class="invalid-feedback display-component">
+                                                <div *ngIf="checkInFormGroup.get('checkInTime').errors.required">Pointing Time is required!</div>
+                                            </div>
+                                        </div>
+      
+                                        <!-- <div class="input-group">
+                                            <div class="w-100"><p-calendar placeholder="Select a start date..." formControlName="checkInDate" [showTime]="true" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar></div>
+                                            <div *ngIf="checkInFormGroup.get('checkInDate').invalid && checkInFormGroup.get('checkInDate').touched" class="invalid-feedback display-component">
+                                                <div *ngIf="checkInFormGroup.get('checkInDate').errors.required">Start Date is required!</div>
+                                            </div>
+                                        </div> -->
+
+
+                                        <div class="text-center">
+                                          <button pButton pRipple class="p-button-success my-4" (click)="add()" [disabled]="checkInFormGroup.invalid">Add Pointing</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </ng-template>
+                        </p-toolbar>
+                      
+                      <div class="pointing-tables" *ngIf="{ netCheckInsList: netCheckInsList$ | async, brutCheckInsList: brutCheckInsList$ | async } as props">
+                          <div class="mr-5 pointing-table-1-width">
+                              <h6>Net Pointings</h6>
+                              <p-table 
+                                  [value]="props.netCheckInsList" 
+                                  [rows]="10"
+                                  [paginator]="true"
+                                  responsiveLayout="scroll" 
+                                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} pointings"
+                                  [showCurrentPageReport]="true"
+                              >
+                                  <ng-template pTemplate="header">
+                                      <tr>
+                                          <th>Pointing Date</th>
+                                          <th>Pointing Time</th>
+                                      </tr>
+                                  </ng-template>
+                                  <ng-template pTemplate="body" let-groupedCheckIn>
+                                      <tr>
+                                          <td style="min-width: 300px;">{{groupedCheckIn.date | date:'fullDate'}}</td>
+                                          <td class="d-flex justify-content-evenly">
+                                              <span 
+                                                  *ngFor="let checkIn of groupedCheckIn.checkIns" 
+                                                  class="mr-1 d-flex justify-content-around badge badge-pill" 
+                                                  [ngClass]="{'badge-success': checkIn?.checkInType === 'IN', 'badge-danger': checkIn?.checkInType === 'OUT'}"
+                                              >
+                                                  <i class="pi pi-check-circle mr-2" [ngClass]="{'pi-check-circle': checkIn.checkInType === 'IN', 'pi-times-circle': checkIn.checkInType === 'OUT'}"></i>
+                                                  <span class="d-flex align-items-center justify-content-center">{{checkIn.checkInDate | date:'shortTime'}}</span>
+                                              </span>
+                                          </td>
+                                      </tr>
+                                  </ng-template>
+                                  <ng-template pTemplate="summary">
+                                    <div class="p-d-flex p-ai-center p-jc-between">
+                                        In total there are {{ props.netCheckInsList ? props.netCheckInsList.length : 0 }} pointings.
+                                    </div>
+                                  </ng-template>
+                              </p-table>
+                          </div>
+      
+                          <div class="pointing-table-2-width">
+                              <h6>Gross Pointings</h6>
+                              <p-table 
+                                  [value]="props.brutCheckInsList" 
+                                  [rows]="10"
+                                  [paginator]="true"
+                                  responsiveLayout="scroll"
+                                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} pointings"
+                                  [showCurrentPageReport]="true"
+                              >
+                                  <ng-template pTemplate="header">
+                                      <tr>
+                                          <th>Pointing Date</th>
+                                          <th>Pointing Time</th>
+                                      </tr>
+                                  </ng-template>
+                                  <ng-template pTemplate="body" let-groupedCheckIn>
+                                      <tr>
+                                          <td style="min-width: 300px;">{{groupedCheckIn.date | date:'fullDate'}}</td>
+                                          <td class="d-flex justify-content-evenly">
+                                              <span 
+                                                  *ngFor="let checkIn of groupedCheckIn.checkIns" 
+                                                  class="mr-1 d-flex justify-content-around badge badge-pill" 
+                                                  [ngClass]="{'badge-success': checkIn?.checkInType === 'IN', 'badge-danger': checkIn?.checkInType === 'OUT'}"
+                                              >
+                                                  <i class="pi pi-check-circle mr-2" [ngClass]="{'pi-check-circle': checkIn.checkInType === 'IN', 'pi-times-circle': checkIn.checkInType === 'OUT'}"></i>
+                                                  <span class="d-flex align-items-center">{{checkIn.checkInDate | date:'shortTime'}}</span>
+                                              </span>
+                                          </td>
+                                      </tr>
+                                  </ng-template>
+                                  <ng-template pTemplate="summary">
+                                    <div class="p-d-flex p-ai-center p-jc-between">
+                                        In total there are {{ props.brutCheckInsList ? props.brutCheckInsList.length : 0 }} pointings.
+                                    </div>
+                                  </ng-template>
+                              </p-table>
+                          </div>
+                      </div>    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

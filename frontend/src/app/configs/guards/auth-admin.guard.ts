@@ -20,7 +20,7 @@ export class AuthAdminGuard implements CanActivate {
         if(role === Role.ADMIN){
           return true;
         } else {
-          this.router.navigate(['/unauthorized']);
+          this.router.navigate(['/auth/unauthorized']);
           return false
         }
       }))
