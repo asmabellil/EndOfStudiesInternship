@@ -121,8 +121,8 @@ const generatePretPDF = async (req: Request, res: Response) => {
   try {
     const result = await pretService.generatePretPDF(req.params.pretId);
     res.status(result.status);
-    if (result.filename) {
-      return res.send({ message: result.message, filename: result.filename });
+    if (result.filePath) {
+      return res.send({ message: result.message, filename: result.filePath });
     }
     return res.send({ message: result.message });
   } catch (error) {

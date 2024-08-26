@@ -7,12 +7,14 @@ import { Echance, Pret, User } from 'db';
 import PDFDocument from 'pdfkit';
 import path, { dirname } from 'path';
 import fs from 'fs';
+import moment from 'moment';
 
 const create = async (pret: IPret, options: any = {}): Promise<any> => {
   try {
     const interest = parseFloat(process.env.INTEREST);
-    const montantARemb = pret.montantPret + ((pret.montantPret * interest) / 100);
-    const montantRembParMois = ((montantARemb - pret.montant1ereRemb) / pret.echanceNumber);
+    const montantARemb = pret.montantPret + (pret.montantPret * interest) / 100;
+    const montantRembParMois =
+      (montantARemb - pret.montant1ereRemb) / pret.echanceNumber;
     const soldRest = montantARemb - pret.montant1ereRemb;
     const newPret: any = await PretModel.create(
       {
@@ -72,24 +74,30 @@ const read = async (id: string): Promise<any> => {
 const update = async (pret: IPret): Promise<any> => {
   try {
     console.log(pret);
-    
+
     const interest = parseFloat(process.env.INTEREST);
-    const montantARemb = pret.montantPret + ((pret.montantPret * interest) / 100);
-    const montantRembParMois = ((montantARemb - pret.montant1ereRemb) / pret.echanceNumber);
+    const montantARemb = pret.montantPret + (pret.montantPret * interest) / 100;
+    const montantRembParMois =
+      (montantARemb - pret.montant1ereRemb) / pret.echanceNumber;
     const soldRest = montantARemb - pret.montant1ereRemb;
 
-    const fieldsToUpdate = { ...pret, montantARemb, montantRembParMois, soldRest };
+    const fieldsToUpdate = {
+      ...pret,
+      montantARemb,
+      montantRembParMois,
+      soldRest,
+    };
     console.log(fieldsToUpdate);
-    
+
     delete fieldsToUpdate.id; // Exclude the ID field from being updated
     const affectedRows = await PretModel.update(fieldsToUpdate, {
       where: { id: pret.id },
     });
     if (affectedRows[0] > 0) {
-      if (pret.status === "Accepted"){
+      if (pret.status === 'Accepted') {
         try {
-          const echanceNumber = pret.echanceNumber;
-          let dateEcheance = new Date(pret.dateEcheance);
+          const { echanceNumber } = pret;
+          const dateEcheance = new Date(pret.dateEcheance);
           const pretId = pret.id;
           const echance = [];
           for (let i = 0; i < echanceNumber; i++) {
@@ -98,13 +106,16 @@ const update = async (pret: IPret): Promise<any> => {
             echance.push({
               dateEchance: newDateEcheance,
               montantRembourse: montantRembParMois,
-              pretId: pretId,
+              pretId,
             });
           }
           await Echance.bulkCreate(echance);
           return { status: 200, message: 'Pret updated', pret };
         } catch (error) {
-          return { status: 400, message: `Error creating echances: ${error.message}` };
+          return {
+            status: 400,
+            message: `Error creating echances: ${error.message}`,
+          };
         }
       } else {
         return { status: 200, message: 'Pret updated', pret };
@@ -158,7 +169,6 @@ const getListPret = async (searchWord: any): Promise<any> => {
 
 const getListPretByUserId = async (userId: any): Promise<any> => {
   try {
-
     const listPret = await PretModel.findAndCountAll({
       where: { userId },
     });
@@ -175,10 +185,13 @@ const getListPretByUserId = async (userId: any): Promise<any> => {
 
 const getListEchances = async (): Promise<any> => {
   try {
-    const listEchances = await Echance.findAndCountAll({
-    });
+    const listEchances = await Echance.findAndCountAll({});
 
-    return { status: 200, message: 'Echances fetched successfully', listEchances };
+    return {
+      status: 200,
+      message: 'Echances fetched successfully',
+      listEchances,
+    };
   } catch (err) {
     logger.error(`Error fetching Echances list: %O`, err.message);
     return {
@@ -194,7 +207,11 @@ const getListEchancesByUserId = async (userId: any): Promise<any> => {
       include: [{ model: PretModel, where: { userId } }],
     });
 
-    return { status: 200, message: 'Echances fetched successfully', listEchances };
+    return {
+      status: 200,
+      message: 'Echances fetched successfully',
+      listEchances,
+    };
   } catch (err) {
     logger.error(`Error fetching Echances list: %O`, err.message);
     return {
@@ -206,10 +223,17 @@ const getListEchancesByUserId = async (userId: any): Promise<any> => {
 
 const generatePretPDF = async (pretId) => {
   try {
+    // Fetch the Pret, User, and associated Echances
     const pret: any = await Pret.findByPk(pretId, {
       include: [
-        { model: Echance },
-        { model: User },
+        {
+          model: User,
+          as: 'User',
+        },
+        {
+          model: Echance,
+          as: 'Echances',
+        },
       ],
     });
 
@@ -217,123 +241,121 @@ const generatePretPDF = async (pretId) => {
       throw new Error('Pret not found');
     }
 
-    const doc = new PDFDocument({ margin: 50, size: 'A4', font: 'Helvetica' });
-    const filename = path.join(__dirname, '../../../public', `Pret_${pret.pretRef}.pdf`);
+    const user = pret.User;
+    const echances = pret.Echances;
+    const paymentStatus = pret.moneyStatus ? 'Fully Paid' : 'Not Fully Paid';
 
-    doc.pipe(fs.createWriteStream(filename));
+    // Create a new PDF document with margins
+    const doc = new PDFDocument({ margin: 50 });
 
-    // Colors
-    const primaryColor = '#0000FF'; // Blue
-    const secondaryColor = '#FFFFFF'; // White
-    const textColor = '#000000'; // Black
-    const tableHeaderColor = '#1E90FF'; // Lighter blue for table header
+    // Set the file to write to
+    const filePath = `./public/Pret_${pret.pretRef}.pdf`;
+    doc.pipe(fs.createWriteStream(filePath));
 
-    // Header
+    // Draw a black border around the entire document
     doc
-      .fontSize(18)
-      .fillColor(primaryColor)
-      .text('Pret Details', { align: 'center' })
-      .moveDown(1);
+      .rect(10, 10, doc.page.width - 20, doc.page.height - 20)
+      .strokeColor('black')
+      .lineWidth(1)
+      .stroke();
+
+    // Set some styles and fonts
+    doc.fontSize(12).font('Helvetica');
+
+    // Add title
+    doc.fontSize(18).text('Pret Details', { align: 'center' }).moveDown(1.5);
 
     // Pret Details Box
-    const boxWidth = 250;
-    const boxHeight = 180;
-
     doc
-      .rect(doc.page.margins.left, doc.y, boxWidth, boxHeight)
-      .stroke(primaryColor);
-
-    const details = [
-      { label: 'Pret Reference', value: pret.pretRef },
-      { label: 'Date Obtention', value: pret.dateObtention ? pret.dateObtention.toDateString() : 'N/A' },
-      { label: 'Date Echeance', value: pret.dateEcheance ? pret.dateEcheance.toDateString() : 'N/A' },
-      { label: 'Montant Pret', value: pret.montantPret.toFixed(2) },
-      { label: 'Montant à Remb', value: pret.montantARemb.toFixed(2) },
-      { label: 'Montant 1ere Remb', value: pret.montant1ereRemb.toFixed(2) },
-      { label: 'Montant Remb Par Mois', value: pret.montantRembParMois.toFixed(2) },
-      { label: 'Sold Rest', value: pret.soldRest.toFixed(2) },
-      { label: 'Status', value: pret.status || 'N/A' },
-      { label: 'Money Status', value: pret.moneyStatus ? 'Paid' : 'Unpaid' },
-    ];
-
-    let currentY = doc.y + 10;
-    details.forEach((detail) => {
-      doc
-        .fontSize(10)
-        .fillColor(textColor)
-        .text(detail.label, doc.page.margins.left + 10, currentY, { width: boxWidth / 2 - 10 })
-        .text(detail.value, doc.page.margins.left + boxWidth / 2, currentY, { width: boxWidth / 2 - 10, align: 'right' });
-      currentY += 16;
-    });
+      .fillColor('black')
+      .fontSize(12)
+      .text(`Pret Ref: ${pret.pretRef}`, 60, 110)
+      .text(
+        `Date Obtention: ${moment(pret.dateObtention).format('DD-MM-YYYY')}`,
+        60,
+        130,
+      )
+      .text(
+        `Date Echeance: ${moment(pret.dateEcheance).format('DD-MM-YYYY')}`,
+        60,
+        150,
+      )
+      .text(`Montant Pret: ${pret.montantPret}`, 60, 170)
+      .text(`Montant à Rembourser: ${pret.montantARemb}`, 60, 190)
+      .text(`Sold Rest: ${pret.soldRest}`, 60, 210)
+      .text(`Status: ${pret.status}`, 60, 230)
+      .text(`Payment Status: ${paymentStatus}`, 60, 250);
 
     // User Details Box
     doc
-      .rect(doc.page.width - doc.page.margins.right - boxWidth, doc.y, boxWidth, boxHeight)
-      .stroke(primaryColor);
+      .text(`UserName: ${user.firstName} ${user.lastName}`, 360, 110)
+      .text(`Email: ${user.email}`, 360, 130)
+      .text(`Phone: ${user.phoneNumber}`, 360, 150)
+      .text(`Role: ${user.role}`, 360, 170);
 
+    // Add a table for Echances
     doc
-      .fontSize(12)
-      .fillColor(primaryColor)
-      .text('User Details:', doc.page.width - doc.page.margins.right - boxWidth + 10, doc.y + 10)
-      .fontSize(10)
-      .fillColor(textColor)
-      .text(`Name: ${pret.User.firstName || 'N/A'} ${pret.User.lastName || 'N/A'}`, doc.page.width - doc.page.margins.right - boxWidth + 10, doc.y + 30)
-      .text(`Email: ${pret.User.email || 'N/A'}`, doc.page.width - doc.page.margins.right - boxWidth + 10, doc.y + 50)
-      .text(`Phone Number: ${pret.User.phoneNumber || 'N/A'}`, doc.page.width - doc.page.margins.right - boxWidth + 10, doc.y + 70);
-
-    doc.moveDown(2);
-
-    // Echances Table
-    doc
-      .fontSize(14)
-      .fillColor(primaryColor)
-      .text('Echances:', { underline: true })
+      .moveDown(2)
+      .text('Echances:', 50, 270, { underline: true })
       .moveDown(0.5);
 
-    const tableTop = doc.y;
-    const colWidths = [80, 200, 200];
-
-    // Table Header
-    doc
-      .fillColor(tableHeaderColor)
-      .rect(doc.page.margins.left, tableTop, colWidths.reduce((a, b) => a + b, 0), 20)
-      .fill();
-
-    doc
-      .fillColor(secondaryColor)
-      .fontSize(12)
-      .text('Echance', doc.page.margins.left + 5, tableTop + 5)
-      .text('Date Echeance', doc.page.margins.left + colWidths[0] + 5, tableTop + 5)
-      .text('Montant Remboursé', doc.page.margins.left + colWidths[0] + colWidths[1] + 5, tableTop + 5);
-
-    // Table Rows
-    let rowY = tableTop + 20;
-    pret.Echances.forEach((echance, index) => {
-      const rowColor = index % 2 === 0 ? '#F0F0F0' : secondaryColor;
-
+    if (echances.length === 0) {
+      // No Echances message
       doc
-        .fillColor(rowColor)
-        .rect(doc.page.margins.left, rowY, colWidths.reduce((a, b) => a + b, 0), 20)
-        .fill();
-
+        .fontSize(12)
+        .fillColor('grey')
+        .text('No Echances available for this Pret.', 50, 290);
+    } else {
+      // Define table headers with background colors
+      const tableTop = 290;
+      doc.rect(50, tableTop, 500, 20).fill('#e0e0e0').stroke();
       doc
-        .fillColor(textColor)
-        .fontSize(10)
-        .text(`Echance ${index + 1}`, doc.page.margins.left + 5, rowY + 5)
-        .text(echance.dateEchance instanceof Date ? echance.dateEchance.toDateString() : 'Invalid Date', doc.page.margins.left + colWidths[0] + 5, rowY + 5)
-        .text(`${echance.montantRembourse.toFixed(2)}`, doc.page.margins.left + colWidths[0] + colWidths[1] + 5, rowY + 5);
+        .fillColor('black')
+        .fontSize(12)
+        .text('Echance Date', 70, tableTop + 5)
+        .text('Montant Rembourse', 200, tableTop + 5)
+        .text('Status', 330, tableTop + 5);
 
-      rowY += 20;
-    });
+      echances.forEach((echance, index) => {
+        const isPaid = moment().isAfter(echance.dateEchance);
+        const statusText = isPaid ? 'Paid' : 'Not Paid';
+        const statusColor = isPaid ? 'black' : 'grey';
+        const rowTop = tableTop + 25 + index * 20;
 
-    // Finalize the PDF and end the stream
+        // Alternate row color (white and grey)
+        doc
+          .rect(50, rowTop, 500, 20)
+          .fill(index % 2 === 0 ? 'white' : '#f2f2f2')
+          .stroke();
+
+        doc
+          .fillColor('black')
+          .text(moment(echance.dateEchance).format('DD-MM-YYYY'), 70, rowTop + 5)
+          .text(echance.montantRembourse, 200, rowTop + 5)
+          .fillColor(statusColor)
+          .text(statusText, 330, rowTop + 5);
+      });
+    }
+
+    // Finalize the PDF and end the document
     doc.end();
 
-    return { status: 200, filename };
+    return { status: 200, message: 'Doc generated', filePath };
   } catch (error) {
-    console.error(error);
-    return { status: 400, message: error.message };
+    {
+      return { status: 400, message: error.message };
+    }
   }
 };
 
-export { create, read, update, deleteById, getListPret, getListPretByUserId, getListEchances, getListEchancesByUserId, generatePretPDF };
+export {
+  create,
+  read,
+  update,
+  deleteById,
+  getListPret,
+  getListPretByUserId,
+  getListEchances,
+  getListEchancesByUserId,
+  generatePretPDF,
+};
