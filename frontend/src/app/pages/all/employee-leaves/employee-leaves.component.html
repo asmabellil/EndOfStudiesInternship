@@ -1,0 +1,327 @@
+<div class="header down-side-border bg-dark-blue pb-9 pt-5 pt-md-9">
+    <div class="container-fluid">
+      <div class="header-body">
+      </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--9">
+    <div class="row">
+        <div class="col-xl-12 mb-5 mb-xl-0">
+            <div class="card shadow">
+                <div class="card-body">
+                    <p-toolbar styleClass="mb-4">
+                        <ng-template pTemplate="left">
+                          <h5 class="mb-0">Leaves Requests</h5>
+                        </ng-template>
+                    
+                        <ng-template pTemplate="right">
+        
+                        </ng-template>
+                      </p-toolbar>
+                      
+                      <div class="card" *ngIf="{ leaves: leavesList$ | async } as props">              
+                        <p-table
+                          #dt
+                          [value]="props.leaves?.slice()"
+                          [rows]="3"
+                          [paginator]="true"
+                          [globalFilterFields]="[
+                              'daysNumber',
+                              'startDate',
+                              'endDate',
+                              'leaveType',
+                              'status',
+                              'startDateSpecification',
+                              'endDateSpecification'
+                          ]"
+                          [rowHover]="true"
+                          dataKey="id"
+                          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} leaves"
+                          [showCurrentPageReport]="true"
+                        >
+                        <ng-template pTemplate="caption">
+                          <div class="d-flex align-items-center justify-content-end">
+                              <span class="p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." class="mr-2"/>
+                      
+                                <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-outlined p-button-default p-mr-2" (click)="open(addLeave)"></button>
+                                <ng-template #addLeave let-c="close" let-d="dismiss">
+                                  <div class="modal-content">
+                                    <div class="modal-body p-0">
+                                      <div class="card bg-secondary shadow border-0">
+                                        <div class="card-header bg-white ">
+                                          <div class="text-muted text-center">Adding leave</div>
+                                        </div>
+                                        <div class="card-body px-lg-5 py-lg-3">
+                                          <p>All fields are required!</p>
+                                          <form [formGroup]="addingLeaveForm">
+                                            <div class="form-group d-flex"  style="width: 50%;">
+                                              <div class="input-group mr-3">
+                                                <div class="w-100">
+                                                  <select class="form-control" formControlName="leaveType">
+                                                    <option value="null" disabled>Select Leave Nature...</option>
+                                                    <option *ngFor="let leaveType of leavesTypes" [value]="leaveType">{{ leaveType }}</option>
+                                                  </select>
+                                                </div>
+                                                <div *ngIf="addingLeaveForm.get('leaveType').invalid && addingLeaveForm.get('leaveType').touched" class="invalid-feedback display-component">
+                                                  <div *ngIf="addingLeaveForm.get('leaveType').errors.required">Nature is required!</div>
+                                                </div>  
+                                              </div>
+                                            </div>
+      
+                                            <div class="form-group d-flex justify-content-between">
+                                              <div class="mr-2 w-100" >
+                                                <div class="input-group mr-3">
+                                                  <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                  </div>
+                                                  <input class="form-control datepicker" placeholder="Select a start date..." formControlName="startDate" ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()" type="text" />
+                                                </div>
+                                                <div *ngIf="addingLeaveForm.get('startDate').invalid && addingLeaveForm.get('startDate').touched" class="invalid-feedback display-component">
+                                                  <div *ngIf="addingLeaveForm.get('startDate').errors.required">Start Date is required!</div>
+                                                </div>
+                                              </div>
+        
+                                              <div class="w-100">
+                                                <div class="input-group">
+                                                  <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                  </div>
+                                                  <input class="form-control datepicker" placeholder="Select a end date..." formControlName="endDate" ngbDatepicker #d2="ngbDatepicker" (click)="d2.toggle()" type="text"/>
+                                                </div>
+                                                <div *ngIf="addingLeaveForm.get('endDate').invalid && addingLeaveForm.get('endDate').touched" class="invalid-feedback display-component">
+                                                  <div *ngIf="addingLeaveForm.get('endDate').errors.required">End Date is required!</div>
+                                                </div>
+                                              </div>
+                                            </div>
+      
+      
+                                            <div class="form-group d-flex justify-content-between">
+                                              <div class="input-group mr-3">
+                                                <div class="w-100 d-flex justify-content-around">
+                                                  <div>Morning Leave</div>
+                                                  <div>
+                                                    <label class="custom-toggle-special d-flex justify-content-around">
+                                                      <input type="checkbox" (change)="onAddingCheckboxChange($event, 'startDateSpecification')">
+                                                      <span class="custom-toggle-slider-special"></span>
+                                                    </label>
+                                                  </div>
+                                                  <div>Afternoon Leave</div>
+                                                </div>
+                                              </div>
+        
+                                              <div class="input-group">
+                                                <div class="w-100 d-flex justify-content-around">
+                                                  <div>Afternoon End</div>
+                                                  <div>
+                                                    <label class="custom-toggle-special d-flex justify-content-around">
+                                                      <input type="checkbox" (change)="onAddingCheckboxChange($event, 'endDateSpecification')">
+                                                      <span class="custom-toggle-slider-special"></span>
+                                                    </label>
+                                                  </div>
+                                                  <div>Evening End</div>
+                                                </div>
+                                              </div>
+                                            </div>
+      
+                                            <div class="form-group d-flex justify-content-between">
+                                              <div class="input-group">
+                                                <div class="w-100"><textarea class="form-control form-control-alternative" rows="4" placeholder="Write your reason here ..." formControlName="reason"></textarea></div>
+                                              </div>                                
+                                            </div>
+      
+                                            <div class="text-center">
+                                              <button pButton pRipple class="p-button-success my-4" (click)="add()" [disabled]="addingLeaveForm.invalid">Add Leave</button>
+                                            </div>
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </span>
+                          </div>
+                      </ng-template> 
+                          <ng-template pTemplate="header">
+                            <tr>
+                              <th pSortableColumn="daysNumber">
+                                Days Number <p-sortIcon field="daysNumber"></p-sortIcon>
+                              </th>
+                              <th pSortableColumn="beginDate">
+                                Begin Date <p-sortIcon field="beginDate"></p-sortIcon>
+                              </th>
+                              <th pSortableColumn="endDate">
+                                End Date <p-sortIcon field="endDate"></p-sortIcon>
+                              </th>
+                              <th pSortableColumn="leaveType">
+                                Nature <p-sortIcon field="leaveType"></p-sortIcon>
+                              </th>
+                              <th pSortableColumn="status">
+                                Status <p-sortIcon field="status"></p-sortIcon>
+                              </th>
+                              <th></th>
+                            </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-leave>
+                            <tr>
+                              <td>{{ leave.daysNumber }} {{leave.daysNumber===1 ? 'day' : 'days'}} </td>
+                              <td>
+                                <div class="d-flex justify-content-around py-2">
+                                  <span>{{ leave.startDate | date:'dd/MM/yyyy' }}</span>
+                                  <span class="badge badge-pill badge-default"> {{leave.startDateSpecification}} </span>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="d-flex justify-content-around py-2">
+                                  <span>{{ leave.endDate | date:'dd/MM/yyyy' }}</span>
+                                  <span class="badge badge-pill badge-default"> {{leave.endDateSpecification}} </span>
+                                </div>
+                              </td>
+                              <td>{{ leave.leaveType || '--' }}</td>
+                              <td>
+                                <span class="badge badge-pill" 
+                                  [ngClass]="{'badge-success': leave.status === 'Valid', 'badge-danger' : leave.status === 'Invalid', 'badge-primary' : leave.status === 'Pending'}"
+                                >{{ leave.status === 'Valid' ? 'Accepted' : leave.status === 'Invalid' ? 'Rejected' : 'Pending' || '--' }}</span>
+                              </td>
+                              <td>
+                                <div class="d-flex">
+                                  <button *ngIf="leave.status === 'Pending'" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-help p-button-outlined mr-1" (click)="specialOpen(editLeave, leave)"></button>
+                                  <button *ngIf="leave.status === 'Pending'" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined mr-1" (click)="deleteLeave(leave.id)"></button> 
+                                  <button *ngIf="leave.rejectionReason !== ''" pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-secondary p-button-outlined" placement="left" ngbTooltip="Rejection Reason: {{ leave.rejectionReason }}"></button> 
+                                </div>
+                              </td>
+                            </tr>
+        
+                            <ng-template #editLeave let-c="close" let-d="dismiss">
+                              <div class="modal-content">
+                                <div class="modal-body p-0">
+                                  <div class="card bg-secondary shadow border-0">
+                                    <div class="card-header bg-white ">
+                                      <div class="text-muted text-center">Editing leave</div>
+                                    </div>
+                                    <div class="card-body px-lg-5 py-lg-3">
+                                      <p>All fields are required!</p>
+                                      <form [formGroup]="editingLeaveForm">
+                                        <div class="form-group d-flex"  style="width: 50%;">
+                                          <div class="input-group mr-3">
+                                            <div class="w-100">
+                                              <select class="form-control" formControlName="leaveType">
+                                                <option value="null" disabled>Select Leave Nature...</option>
+                                                <option *ngFor="let leaveType of leavesTypes" [value]="leaveType">{{ leaveType }}</option>
+                                              </select>
+                                            </div>
+                                            <div *ngIf="editingLeaveForm.get('leaveType').invalid && editingLeaveForm.get('leaveType').touched" class="invalid-feedback display-component">
+                                              <div *ngIf="editingLeaveForm.get('leaveType').errors.required">Nature is required!</div>
+                                            </div>  
+                                          </div>
+                                        </div>
+      
+                                        <div class="form-group d-flex justify-content-between">
+                                          <div class="mr-2 w-100" >
+                                            <div class="input-group mr-3">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                              </div>
+                                              <input class="form-control datepicker" placeholder="Select a start date..." formControlName="startDate" ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()" type="text"/>
+                                            </div>
+                                            <div *ngIf="addingLeaveForm.get('startDate').invalid && addingLeaveForm.get('startDate').touched" class="invalid-feedback display-component">
+                                              <div *ngIf="addingLeaveForm.get('startDate').errors.required">Start Date is required!</div>
+                                            </div>
+                                          </div>
+    
+                                          <div class="w-100">
+                                            <div class="input-group">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                              </div>
+                                              <input class="form-control datepicker" placeholder="Select a end date..." formControlName="endDate" ngbDatepicker #d2="ngbDatepicker" (click)="d2.toggle()" type="text"/>
+                                            </div>
+                                            <div *ngIf="addingLeaveForm.get('endDate').invalid && addingLeaveForm.get('endDate').touched" class="invalid-feedback display-component">
+                                              <div *ngIf="addingLeaveForm.get('endDate').errors.required">End Date is required!</div>
+                                            </div>
+                                          </div>
+                                        </div>
+      
+      
+                                        <div class="form-group d-flex justify-content-between">
+                                          <div class="input-group mr-3">
+                                            <div class="w-100 d-flex justify-content-around">
+                                              <div>Morning Leave</div>
+                                              <div>
+                                                <label class="custom-toggle-special d-flex justify-content-around">
+                                                  <input type="checkbox" (change)="onEditingCheckboxChange($event, 'startDateSpecification')" [checked]="startDateSpecification === 'Afternoon Leave'">
+                                                  <span class="custom-toggle-slider-special rounded-circle"></span>
+                                                </label>
+                                              </div>
+                                              <div>Afternoon Leave</div>
+                                            </div>
+                                          </div>
+      
+                                          <div class="input-group">
+                                            <div class="w-100 d-flex justify-content-around">
+                                              <div>Afternoon End</div>
+                                              <div>
+                                                <label class="custom-toggle-special d-flex justify-content-around">
+                                                  <input type="checkbox" (change)="onEditingCheckboxChange($event, 'endDateSpecification')" [checked]="endDateSpecification === 'Evening End'">
+                                                  <span class="custom-toggle-slider-special rounded-circle"></span>
+                                                </label>
+                                              </div>
+                                              <div>Evening End</div>
+                                            </div>
+                                          </div>
+                                        </div>
+      
+                                        <div class="form-group d-flex justify-content-between">
+                                          <div class="input-group">
+                                            <div class="w-100"><textarea class="form-control form-control-alternative" rows="4" placeholder="Write your reason here ..." formControlName="reason"></textarea></div>
+                                          </div>                                
+                                        </div>
+      
+                                        <div class="text-center">
+                                          <button pButton pRipple class="p-button-success my-4" (click)="edit()" [disabled]="editingLeaveForm.invalid">Edit Leave</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </ng-template>
+                          <ng-template pTemplate="summary">
+                            <div class="p-d-flex p-ai-center p-jc-between">
+                              In total there are {{ props.leaves ? props.leaves.length : 0 }} leaves.
+                            </div>
+                          </ng-template>
+                        </p-table>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<p-toast position="bottom-center" key="delete" (onClose)="onReject()" [baseZIndex]="5000">
+    <ng-template let-message pTemplate="message">
+        <div class="p-flex p-flex-column" style="flex: 1">
+            <div class="p-text-center">
+                <i class="pi pi-exclamation-triangle" style="font-size: 1rem"></i>
+                <h6>{{message.summary}}</h6>
+                <p>{{message.detail}}</p>
+            </div>
+            <div class="p-grid p-fluid d-flex justify-content-center">
+                <div class="p-col-6 mr-2">
+                    <button type="button" pButton (click)="onConfirm()" label="Yes" class="p-button-success"></button>
+                </div>
+                <div class="p-col-6">
+                    <button type="button" pButton (click)="onReject()" label="No" class="p-button-secondary"></button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    </p-toast>

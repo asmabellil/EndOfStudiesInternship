@@ -1,0 +1,80 @@
+@media (min-width: 1200px) {
+    .pointing-tables{
+        flex-direction: row !important;
+    }
+
+    .pointing-table-1-width {
+        width: 570px;
+    }
+
+    .pointing-table-2-width {
+        width: 570px;
+    }
+}
+
+@media (min-width: 1900px) {
+    .pointing-table-1-width {
+        width: 750px;
+    }
+
+    .pointing-table-2-width {
+        width: 750px;
+    }
+}
+
+.pointing-tables{
+    display: flex;
+    flex-direction: column;
+}
+
+:host ::ng-deep {
+    .modal-lg {
+        max-width: 500px !important;
+    }
+}
+
+p-calendar {
+    button.p-datepicker-trigger {
+        background: #5e72e4 !important;
+        border: #5e72e4 !important;
+
+        .p-button-label {
+            display: none;
+        }
+    }
+
+    span {
+        width: 100% !important;
+    }
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 12px;
+    cursor: pointer;
+    background-color: #007ad9;
+    color: white;
+    border: 1px solid #007ad9;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+}
+  
+.custom-file-upload:hover {
+    background-color: #005bb5;
+    border-color: #005bb5;
+}
+  
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+  
+.custom-file-upload i {
+    margin-right: 8px;
+}
+  
+#file-name {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #333;
+}

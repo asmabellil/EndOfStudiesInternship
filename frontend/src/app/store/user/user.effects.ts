@@ -32,7 +32,7 @@ export class UserEffects {
             return this.userService.getUser(decodedToken['userId']).pipe(
               mergeMap((getUserRes) => {
                 decodedToken['role'] === 'Admin' ? this.router.navigate(['admin/dashboard']) : this.router.navigate(['employee/home']);
-                this.messageService.add({severity:'success', summary:'Operation Succeed', detail: 'Welcome to dashboard!'});
+                this.messageService.add({severity:'success', summary:'Operation Succeed', detail: 'Welcome !'});
 
                 return from([
                   UserActions.connectUserSuccess({ token: connectResult.token, decodedToken: decodedToken, user: getUserRes.user }),
@@ -65,7 +65,8 @@ export class UserEffects {
 
               return from([
                 UserActions.connectUserSuccess({ token: connectResult.token, decodedToken: decodedToken, user: getUserRes.user }),
-                UserActions.getAllUsers()
+                UserActions.getAllUsers(),
+                changeCheckInSelectedUser({ user: getUserRes.user }),
               ])
             })
           )

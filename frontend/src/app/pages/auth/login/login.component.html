@@ -1,0 +1,71 @@
+<div class="container d-flex align-items-center justify-content-center h-80">
+  <div class="row justify-content-center w-100">
+    <div class="col-lg-5 col-md-7">
+      <div class="card bg-secondary shadow border-0">
+        <div class="card-header bg-transparent pb-5">
+          <div class="text-muted text-center mt-2 mb-3"><small>Sign in with</small></div>
+          <div class="btn-wrapper text-center">
+            <div
+            id="g_id_onload"
+            data-client_id="375120995187-l0ao602p3lr8285dpssjang2j30sol4f.apps.googleusercontent.com"
+            data-context="use"
+            data-ux_mode="popup"
+            data-itp_support="true"
+            data-callback="handleCredentialResponse"
+          ></div>
+          <!-- data-auto-select="true" -->
+          <div
+            class="g_id_signin"
+            data-type="standard"
+            data-shape="pill"
+            data-theme="filled_blue"
+            data-text="signin_with"
+            data-size="large"
+            data-logo_alignment="left"
+          ></div>
+          </div>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <div class="text-center text-muted mb-4">
+            <small>Or sign in with credentials</small>
+          </div>
+          <form role="form" [formGroup]="loginForm">
+            <div class="form-group mb-3" [ngClass]="{'focused':focus===true}">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                </div>
+                <input class="form-control" placeholder="Email" type="email" (focus)="focus=true" (blur)="focus=false" formControlName="email">
+              </div>
+              <div *ngIf="loginForm.get('email').invalid && loginForm.get('email').touched" class="invalid-feedback display-component">
+                <div *ngIf="loginForm.get('email').errors.required">Email is required</div>
+                <div *ngIf="loginForm.get('email').errors.email">Email is invalid</div>
+              </div>
+            </div>
+            <div class="form-group" [ngClass]="{'focused':focus1===true}">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                </div>
+                <input class="form-control" placeholder="Password" type="password" (focus)="focus1=true" (blur)="focus1=false" formControlName="password">
+              </div>
+              <div *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched" class="invalid-feedback display-component">
+                <div *ngIf="loginForm.get('password').errors.required">Password is required</div>
+              </div>
+            </div>
+            <div class="text-center">
+              <button type="button" class="btn btn-primary my-4" (click)="connect()" [disabled]="loginForm.invalid">Sign in</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-6">
+          <a href="javascript:void(0)" (click)="routeTo('/auth/forgot-password')" class="text-light">
+            <small>Forgot password?</small>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
