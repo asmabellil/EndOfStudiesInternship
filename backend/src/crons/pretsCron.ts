@@ -23,7 +23,7 @@ async function updateMoneyStatus() {
 }
 
 // Schedule the cron job to run daily at midnight
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 0 * * *', async () => {
   console.log('Running daily cron job to update moneyStatus');
   await updateMoneyStatus();
 });

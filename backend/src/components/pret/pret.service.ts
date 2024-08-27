@@ -8,6 +8,7 @@ import PDFDocument from 'pdfkit';
 import path, { dirname } from 'path';
 import fs from 'fs';
 import moment from 'moment';
+import { sendMail } from '@config/mail';
 
 const create = async (pret: IPret, options: any = {}): Promise<any> => {
   try {
@@ -110,13 +111,45 @@ const update = async (pret: IPret): Promise<any> => {
             });
           }
           await Echance.bulkCreate(echance);
-          return { status: 200, message: 'Pret updated', pret };
+
+          // Send "Accepted" email
+          const user = await User.findByPk(pret.userId); // Assuming you have a User model
+          const mailOptions = {
+            to: user.email,
+            subject: 'Pret Accepted',
+            template: 'pretAccepted',
+            context: {
+              firstName: user.firstName,
+              pretRef: pret.pretRef,
+              montantPret: pret.montantPret,
+              montantARemb: montantARemb,
+              dateEcheance: dateEcheance.toLocaleDateString(),
+            },
+          };
+          await sendMail(mailOptions);
+
+          return { status: 200, message: 'Pret updated and email sent', pret };
         } catch (error) {
           return {
             status: 400,
-            message: `Error creating echances: ${error.message}`,
+            message: `Error creating echances or sending email: ${error.message}`,
           };
         }
+      } else if (pret.status === 'Rejected') {
+        // Send "Rejected" email
+        const user = await User.findByPk(pret.userId); // Assuming you have a User model
+        const mailOptions = {
+          to: user.email,
+          subject: 'Pret Rejected',
+          template: 'pretRejected',
+          context: {
+            firstName: user.firstName,
+            pretRef: pret.pretRef,
+          },
+        };
+        await sendMail(mailOptions);
+
+        return { status: 200, message: 'Pret updated and rejection email sent', pret };
       } else {
         return { status: 200, message: 'Pret updated', pret };
       }

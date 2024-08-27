@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pret Rejected</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #8B0000;
+        }
+        .content {
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 30px;
+            color: #666666;
+        }
+        .line {
+            border-top: 1px solid #ccc;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Pret Rejected</h1>
+        </div>
+        <hr class="line">
+        <div class="content">
+            <p>Dear {{ firstName }},</p>
+            <p>We regret to inform you that your pret with reference number: {{ pretRef }} has been rejected. If you have any questions, please contact us.</p>
+        </div>
+        <div class="footer">
+            <p>This email was automatically generated. Please do not reply.</p>
+        </div>
+    </div>
+</body>
+</html>
