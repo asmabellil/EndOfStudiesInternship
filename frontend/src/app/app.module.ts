@@ -27,6 +27,7 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { FileUploadModule } from 'primeng/fileupload';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
@@ -35,6 +36,9 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { RequestsInterceptor } from './configs/interceptors/requests.interceptor';
 import { EmployeeLayoutComponent } from './layouts/employee-layout/employee-layout.component';
 import { EmployeeLeavesComponent } from './pages/all/employee-leaves/employee-leaves.component';
+import { MyLoansComponent } from './pages/employee/my-loans/my-loans.component';
+import { LoansEffects } from './store/loan/loan.effects';
+import { AllLoansComponent } from './pages/admin/all-loans/all-loans.component';
 
 @NgModule({
   imports: [
@@ -45,7 +49,7 @@ import { EmployeeLeavesComponent } from './pages/all/employee-leaves/employee-le
     ComponentsModule,
     HttpClientModule,
     StoreModule.forRoot(rootReducer),
-    EffectsModule.forRoot([UserEffects, LeavesEffects, CheckInsEffects]),
+    EffectsModule.forRoot([UserEffects, LeavesEffects, CheckInsEffects, LoansEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 30 }),
     ToastModule,
     FormsModule,
@@ -58,13 +62,16 @@ import { EmployeeLeavesComponent } from './pages/all/employee-leaves/employee-le
     RippleModule,
     CalendarModule,
     FileUploadModule,
+    InputNumberModule,
   ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
     EmployeeLayoutComponent,
-    EmployeeLeavesComponent
+    EmployeeLeavesComponent,
+    MyLoansComponent,
+    AllLoansComponent
   ],
   providers: [
     MessageService,

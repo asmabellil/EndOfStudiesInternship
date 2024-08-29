@@ -116,7 +116,7 @@ export class EmployeeLeavesComponent implements OnInit {
   onConfirm() {
     this.store.dispatch(deleteLeave({ leaveId: this.leaveIdToDelete }));
     this.messageService.clear();
-}
+  }
 
   onReject() {
       this.messageService.clear('delete');

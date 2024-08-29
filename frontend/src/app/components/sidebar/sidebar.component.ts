@@ -20,13 +20,16 @@ export const ADMIN_ROUTES: RouteInfo[] = [
   { path: '/admin/all-leaves', title: 'All Leaves',  icon: 'pi pi-calendar', class: '' },
   { path: '/admin/leaves', title: 'Leaves Requests',  icon: 'pi pi-calendar-plus', class: '' },
   { path: '/admin/pointings', title: 'Pointings',  icon: 'pi pi-clock', class: '' },
+  { path: '/admin/my-loans', title: 'My Loans Requests',  icon: 'pi pi-money-bill', class: '' },
+  { path: '/admin/all-loans', title: 'All Loans Requests',  icon: 'pi pi-money-bill', class: '' },
 ];
 
 export const EMPLOYEE_ROUTES: RouteInfo[] = [
   { path: '/employee/home', title: 'Home',  icon: 'pi pi-home', class: '' },
   { path: '/employee/leaves', title: 'Leaves Requests',  icon: 'pi pi-calendar-plus', class: '' },
   { path: '/employee/pointings', title: 'My Pointings',  icon: 'pi pi-clock', class: '' },
-  ]
+  { path: '/employee/my-loans', title: 'My Loans Requests',  icon: 'pi pi-money-bill', class: '' },
+];
 
 @Component({
   selector: 'app-sidebar',

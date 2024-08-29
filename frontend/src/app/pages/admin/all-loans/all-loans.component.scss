@@ -1,0 +1,11 @@
+:host ::ng-deep {
+    .p-toast-message-custom {
+        background-color: #ffffff;
+        border: solid #6f6f6f9e;
+        border-width: 0 0 0 6px;
+        color: #2c1e30;
+        .p-toast-icon-close {
+            color: #2c1e30;
+        }
+    }
+}

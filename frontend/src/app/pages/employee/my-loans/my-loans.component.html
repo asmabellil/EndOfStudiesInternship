@@ -1,0 +1,289 @@
+<div class="header down-side-border bg-dark-blue pb-9 pt-5 pt-md-9">
+    <div class="container-fluid">
+      <div class="header-body">
+      </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--9">
+    <div class="row">
+        <div class="col-xl-12 mb-5 mb-xl-0">
+            <div class="card shadow">
+                <div class="card-body">
+                    <p-toolbar styleClass="mb-4">
+                        <ng-template pTemplate="left">
+                          <h5 class="mb-0">My Loans Requests</h5>
+                        </ng-template>
+                    
+                        <ng-template pTemplate="right">
+        
+                        </ng-template>
+                    </p-toolbar>
+
+                    <div class="card" *ngIf="{ loans: loansList$ | async } as props">              
+                        <p-table
+                        #dt
+                        [value]="props.loans?.slice()"
+                        [rows]="3"
+                        [paginator]="true"
+                        [globalFilterFields]="[
+                            'pretRef',
+                            'dateObtention',
+                            'dateEcheance',
+                            'montantPret',
+                            'montantARemb',
+                            'montant1ereRemb',
+                            'montantRembParMois',
+                            'soldRest',
+                            'status'
+                        ]"
+                        [rowHover]="true"
+                        dataKey="id"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} loans"
+                        [showCurrentPageReport]="true"
+                      >
+                      <ng-template pTemplate="caption">
+                        <div class="d-flex align-items-center justify-content-end">
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-search"></i>
+                              <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." class="mr-2"/>
+                    
+                              <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-outlined p-button-default p-mr-2" (click)="open(addLoan)"></button>
+                              <ng-template #addLoan let-c="close" let-d="dismiss">
+                                <div class="modal-content">
+                                  <div class="modal-body p-0">
+                                    <div class="card bg-secondary shadow border-0">
+                                      <div class="card-header bg-white ">
+                                        <div class="text-muted text-center">Adding Loan</div>
+                                      </div>
+                                      <div class="card-body px-lg-5 py-lg-3">
+                                        <p>All fields are required!</p>
+                                        <form [formGroup]="addingLoanForm">
+                                          <div class="form-group d-flex" style="width: 49%;">
+                                            <input type="text" placeholder="Loan Reference" class="form-control mr-2 bg-white" disabled="" formControlName="pretRef" style="text-align: center;">
+                                            <button class="btn btn-icon btn-2 btn-outline-default" type="button" (click)="addingLoanForm.get('pretRef').setValue(generateLoanReference())">
+                                            <span class="btn-inner--icon"><i class="ni ni-atom"></i></span>
+                                            </button>
+                                          </div>
+
+                                          <div class="form-group d-flex justify-content-between">
+                                            <div class="mr-2 w-100" >
+                                              <div class="input-group mr-3">
+                                                <div class="input-group-prepend">
+                                                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                </div>
+                                                <input class="form-control datepicker" placeholder="Select obtention date..." formControlName="dateObtention" ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()" type="text" />
+                                              </div>
+                                              <div *ngIf="addingLoanForm.get('dateObtention').invalid && addingLoanForm.get('dateObtention').touched" class="invalid-feedback display-component">
+                                                <div *ngIf="addingLoanForm.get('dateObtention').errors.required">Obtention Date is required!</div>
+                                              </div>
+                                            </div>
+      
+                                            <div class="w-100">
+                                              <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                </div>
+                                                <input class="form-control datepicker" placeholder="Select due date..." formControlName="dateEcheance" ngbDatepicker #d2="ngbDatepicker" (click)="d2.toggle()" type="text"/>
+                                              </div>
+                                              <div *ngIf="addingLoanForm.get('dateEcheance').invalid && addingLoanForm.get('dateEcheance').touched" class="invalid-feedback display-component">
+                                                <div *ngIf="addingLoanForm.get('dateEcheance').errors.required">Due Date is required!</div>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <div class="form-group d-flex justify-content-between">
+                                            <div class="input-group mr-2">
+                                              <div class="w-100"><p-inputNumber formControlName="montantPret" suffix=" TND" placeholder="Loan Amount" [min]="0"></p-inputNumber></div>
+                                              <div *ngIf="addingLoanForm.get('montantPret').invalid && addingLoanForm.get('montantPret').touched" class="invalid-feedback display-component">
+                                                <div *ngIf="addingLoanForm.get('montantPret').errors.required">Loan Amount is required!</div>
+                                              </div>
+                                            </div>
+
+                                            <div class="input-group mr-2">
+                                              <div class="w-100"><p-inputNumber formControlName="montant1ereRemb" suffix=" TND" placeholder="Amount 1st Reinbursed" [min]="0"></p-inputNumber></div>
+                                              <div *ngIf="addingLoanForm.get('montant1ereRemb').invalid && addingLoanForm.get('montant1ereRemb').touched" class="invalid-feedback display-component">
+                                                <div *ngIf="addingLoanForm.get('montant1ereRemb').errors.required">Due Date is required!</div>
+                                              </div>
+                                            </div>
+
+                                            <div class="input-group">
+                                              <div class="w-100"><p-inputNumber placeholder="Loan Period (By Month)" formControlName="echanceNumber" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal" [step]="1" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" suffix=" Month" [min]="0"></p-inputNumber></div>
+                                              <div *ngIf="addingLoanForm.get('echanceNumber').invalid && addingLoanForm.get('echanceNumber').touched" class="invalid-feedback display-component">
+                                                <div *ngIf="addingLoanForm.get('echanceNumber').errors.required">Loan period is required!</div>
+                                              </div>
+                                            </div>
+                                        </div>
+    
+                                          <div class="text-center">
+                                            <button pButton pRipple class="p-button-success my-4" (click)="add()" [disabled]="addingLoanForm.invalid">Add Loan</button>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </ng-template>
+                            </span>
+                        </div>
+                    </ng-template> 
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th >#</th>
+                            <th pSortableColumn="dateEcheance">
+                                Obtention Date <p-sortIcon field="dateEcheance"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="dateEcheance">
+                                Due Date <p-sortIcon field="dateEcheance"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="montantPret">
+                                Loan Amount <p-sortIcon field="montantPret"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="montantARemb">
+                                Reinbursed Amount <p-sortIcon field="montantARemb"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="montant1ereRemb">
+                                Amount 1st Reinbursed <p-sortIcon field="montant1ereRemb"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="montantRembParMois">
+                                Month Reinbursed Amount <p-sortIcon field="montantRembParMois"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="soldRest">
+                                Remaining Amount <p-sortIcon field="soldRest"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="status">
+                                Status <p-sortIcon field="status"></p-sortIcon>
+                            </th>
+                            <th></th>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-loan>
+                          <tr>
+                            <td>{{ loan.pretRef }} </td>
+                            <td style="width: 10rem;">{{ loan.dateObtention | date: 'longDate' }}</td>
+                            <td style="width: 10rem;">{{ loan.dateEcheance | date: 'longDate' }}</td>
+                            <td>{{ loan.montantPret }} TND</td>
+                            <td>{{ loan.montantARemb }} TND</td>
+                            <td>{{ loan.montant1ereRemb }} TND</td>
+                            <td>{{ loan.montantRembParMois }} TND</td>
+                            <td>{{ loan.soldRest }} TND</td>
+                            <td>
+                                <span class="badge badge-pill" 
+                                [ngClass]="{'badge-success': loan.status === 'Accepted', 'badge-danger' : loan.status === 'Rejected', 'badge-primary' : loan.status === 'Pending'}"
+                              >{{ loan.status || '--' }}</span>
+                            </td>
+                            <td>
+                              <div class="d-flex">
+                                <button *ngIf="loan.status === 'Pending'" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-help p-button-outlined mr-1" (click)="specialOpen(editLoan, loan)"></button>
+                                <button *ngIf="loan.status === 'Pending'" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined mr-1" (click)="deleteLoan(loan.id)"></button> 
+                                <button *ngIf="loan.status === 'Accepted'" pButton pRipple icon="pi pi-cloud-download" class="p-button-rounded p-button-info p-button-outlined mr-1" (click)="generateAndDownloadPDF(loan.id)"></button> 
+                              </div>
+                            </td>
+                          </tr>
+      
+                          <ng-template #editLoan let-c="close" let-d="dismiss">
+                            <div class="modal-content">
+                              <div class="modal-body p-0">
+                                <div class="card bg-secondary shadow border-0">
+                                  <div class="card-header bg-white ">
+                                    <div class="text-muted text-center">Editing Loan</div>
+                                  </div>
+                                  <div class="card-body px-lg-5 py-lg-3">
+                                    <p>All fields are required!</p>
+                                    <form [formGroup]="editingLoanForm">
+                                      <div class="form-group d-flex" style="width: 49%;">
+                                        <input type="text" placeholder="Loan Reference" class="form-control mr-2 bg-white" disabled="" formControlName="pretRef" style="text-align: center;">
+                                      </div>
+
+                                      <div class="form-group d-flex justify-content-between">
+                                        <div class="mr-2 w-100" >
+                                          <div class="input-group mr-3">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                            </div>
+                                            <input class="form-control datepicker" placeholder="Select obtention date..." formControlName="dateObtention" ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()" type="text" />
+                                          </div>
+                                          <div *ngIf="addingLoanForm.get('dateObtention').invalid && addingLoanForm.get('dateObtention').touched" class="invalid-feedback display-component">
+                                            <div *ngIf="addingLoanForm.get('dateObtention').errors.required">Obtention Date is required!</div>
+                                          </div>
+                                        </div>
+  
+                                        <div class="w-100">
+                                          <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                            </div>
+                                            <input class="form-control datepicker" placeholder="Select due date..." formControlName="dateEcheance" ngbDatepicker #d2="ngbDatepicker" (click)="d2.toggle()" type="text"/>
+                                          </div>
+                                          <div *ngIf="addingLoanForm.get('dateEcheance').invalid && addingLoanForm.get('dateEcheance').touched" class="invalid-feedback display-component">
+                                            <div *ngIf="addingLoanForm.get('dateEcheance').errors.required">Due Date is required!</div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group d-flex justify-content-between">
+                                        <div class="input-group mr-2">
+                                          <div class="w-100"><p-inputNumber formControlName="montantPret" suffix=" TND" placeholder="Loan Amount" [min]="0"></p-inputNumber></div>
+                                          <div *ngIf="addingLoanForm.get('montantPret').invalid && addingLoanForm.get('montantPret').touched" class="invalid-feedback display-component">
+                                            <div *ngIf="addingLoanForm.get('montantPret').errors.required">Loan Amount is required!</div>
+                                          </div>
+                                        </div>
+
+                                        <div class="input-group mr-2">
+                                          <div class="w-100"><p-inputNumber formControlName="montant1ereRemb" suffix=" TND" placeholder="Amount 1st Reinbursed" [min]="0"></p-inputNumber></div>
+                                          <div *ngIf="addingLoanForm.get('montant1ereRemb').invalid && addingLoanForm.get('montant1ereRemb').touched" class="invalid-feedback display-component">
+                                            <div *ngIf="addingLoanForm.get('montant1ereRemb').errors.required">Due Date is required!</div>
+                                          </div>
+                                        </div>
+
+                                        <div class="input-group">
+                                          <div class="w-100"><p-inputNumber placeholder="Loan Period (By Month)" formControlName="echanceNumber" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal" [step]="1" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" suffix=" Month" [min]="0"></p-inputNumber></div>
+                                          <div *ngIf="addingLoanForm.get('echanceNumber').invalid && addingLoanForm.get('echanceNumber').touched" class="invalid-feedback display-component">
+                                            <div *ngIf="addingLoanForm.get('echanceNumber').errors.required">Loan period is required!</div>
+                                          </div>
+                                        </div>
+                                    </div>
+    
+                                      <div class="text-center">
+                                        <button pButton pRipple class="p-button-success my-4" (click)="edit()" [disabled]="editingLoanForm.invalid">Edit Leave</button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </ng-template>
+                        <ng-template pTemplate="summary">
+                          <div class="p-d-flex p-ai-center p-jc-between">
+                            In total there are {{ props.loans ? props.loans.length : 0 }} loans.
+                          </div>
+                        </ng-template>
+                      </p-table>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<p-toast position="bottom-center" key="delete" (onClose)="onReject()" [baseZIndex]="5000">
+    <ng-template let-message pTemplate="message">
+        <div class="p-flex p-flex-column" style="flex: 1">
+            <div class="p-text-center">
+                <i class="pi pi-exclamation-triangle" style="font-size: 1rem"></i>
+                <h6>{{message.summary}}</h6>
+                <p>{{message.detail}}</p>
+            </div>
+            <div class="p-grid p-fluid d-flex justify-content-center">
+                <div class="p-col-6 mr-2">
+                    <button type="button" pButton (click)="onConfirm()" label="Yes" class="p-button-success"></button>
+                </div>
+                <div class="p-col-6">
+                    <button type="button" pButton (click)="onReject()" label="No" class="p-button-secondary"></button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    </p-toast>
