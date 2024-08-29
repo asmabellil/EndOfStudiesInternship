@@ -295,6 +295,14 @@ const generatePretPDF = async (pretId) => {
     // Set some styles and fonts
     doc.fontSize(12).font('Helvetica');
 
+    // Add company details at the top
+    doc
+      .fontSize(10)
+      .text('Entreprise Tunisienne d\'Activités Pétrolières', { align: 'left' })
+      .text('54, Avenue Mohamed V - 1002 Tunis, Tunisie', { align: 'left' })
+      .text('(+216) 71 28 50 97', { align: 'left' })
+      .moveDown(2);
+
     // Add title
     doc.fontSize(18).text('Pret Details', { align: 'center' }).moveDown(1.5);
 
@@ -302,34 +310,34 @@ const generatePretPDF = async (pretId) => {
     doc
       .fillColor('black')
       .fontSize(12)
-      .text(`Pret Ref: ${pret.pretRef}`, 60, 110)
+      .text(`Pret Ref: ${pret.pretRef}`, 60, 160)
       .text(
         `Date Obtention: ${moment(pret.dateObtention).format('DD-MM-YYYY')}`,
         60,
-        130,
+        180,
       )
       .text(
         `Date Echeance: ${moment(pret.dateEcheance).format('DD-MM-YYYY')}`,
         60,
-        150,
+        200,
       )
-      .text(`Montant Pret: ${pret.montantPret}`, 60, 170)
-      .text(`Montant à Rembourser: ${pret.montantARemb}`, 60, 190)
-      .text(`Sold Rest: ${pret.soldRest}`, 60, 210)
-      .text(`Status: ${pret.status}`, 60, 230)
-      .text(`Payment Status: ${paymentStatus}`, 60, 250);
+      .text(`Montant Pret: ${pret.montantPret}`, 60, 220)
+      .text(`Montant à Rembourser: ${pret.montantARemb}`, 60, 240)
+      .text(`Sold Rest: ${pret.soldRest}`, 60, 260)
+      .text(`Status: ${pret.status}`, 60, 280)
+      .text(`Payment Status: ${paymentStatus}`, 60, 300);
 
     // User Details Box
     doc
-      .text(`UserName: ${user.firstName} ${user.lastName}`, 360, 110)
-      .text(`Email: ${user.email}`, 360, 130)
-      .text(`Phone: ${user.phoneNumber}`, 360, 150)
-      .text(`Role: ${user.role}`, 360, 170);
+      .text(`UserName: ${user.firstName} ${user.lastName}`, 360, 160)
+      .text(`Email: ${user.email}`, 360, 180)
+      .text(`Phone: ${user.phoneNumber}`, 360, 200)
+      .text(`Role: ${user.role}`, 360, 220);
 
     // Add a table for Echances
     doc
       .moveDown(2)
-      .text('Echances:', 50, 270, { underline: true })
+      .text('Echances:', 50, 330, { underline: true })
       .moveDown(0.5);
 
     if (echances.length === 0) {
@@ -337,10 +345,10 @@ const generatePretPDF = async (pretId) => {
       doc
         .fontSize(12)
         .fillColor('grey')
-        .text('No Echances available for this Pret.', 50, 290);
+        .text('No Echances available for this Pret.', 50, 350);
     } else {
       // Define table headers with background colors
-      const tableTop = 290;
+      const tableTop = 350;
       doc.rect(50, tableTop, 500, 20).fill('#e0e0e0').stroke();
       doc
         .fillColor('black')
@@ -370,6 +378,18 @@ const generatePretPDF = async (pretId) => {
       });
     }
 
+    // Add a signature section at the end
+    doc
+      .moveDown(2)
+      .fontSize(10)
+      .text('Thank you for your business!', { align: 'center' })
+      .moveDown(1)
+      .text('If you have any questions about this invoice, please contact us:', { align: 'center' })
+      .text('Name, Phone, email@address.com', { align: 'center' })
+      .moveDown(2)
+      .text('Signature:', 50, doc.y)
+      .moveDown(2);
+
     // Finalize the PDF and end the document
     doc.end();
 
@@ -380,6 +400,7 @@ const generatePretPDF = async (pretId) => {
     }
   }
 };
+
 
 export {
   create,
