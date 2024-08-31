@@ -13,8 +13,6 @@ import './crons/pretsCron';
 
 const app: Application = express();
 
-app.use('/public', express.static(path.join(__dirname, '../public')));
-
 app.use(cors());
 
 app.use((req, res, next) => {
@@ -23,6 +21,8 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
+
+app.use('/public', express.static(path.join(__dirname, '../public')));
 
 app.use(httpContext.middleware);
 app.use(httpLogger.successHandler);

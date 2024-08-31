@@ -14,7 +14,7 @@ async function updateMoneyStatus() {
 
   for (const pret of prets) {
     const expectedDate = new Date(pret.dateEcheance);
-    expectedDate.setMonth(expectedDate.getMonth() + pret.echanceNumber);
+    expectedDate.setMonth(expectedDate.getMonth() + pret.echanceNumber -1 );
 
     if (today > expectedDate) {
       await pret.update({ moneyStatus: true });
@@ -23,7 +23,7 @@ async function updateMoneyStatus() {
 }
 
 // Schedule the cron job to run daily at midnight
-cron.schedule('28 18 * * *', async () => {
+cron.schedule('0 0 * * *', async () => {
   console.log('Running daily cron job to update moneyStatus');
   await updateMoneyStatus();
 });
