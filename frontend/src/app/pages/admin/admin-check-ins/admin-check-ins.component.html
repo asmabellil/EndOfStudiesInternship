@@ -29,11 +29,11 @@
                             </div>
     
                             <div class="input-group mr-3">
-                                <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
-                                </div>
-                                <input class="form-control datepicker" placeholder="Search by date..." ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()" type="text" (ngModelChange)="setPointingsLists($event)" [(ngModel)]="searchDate" />
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                               </div>
+                              <input class="form-control datepicker" placeholder="Search by date..." ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()" type="text" (ngModelChange)="setPointingsLists($event)" [(ngModel)]="searchDate" />
+                            </div>
                             </ng-template>
                       
                           <ng-template pTemplate="right" *ngIf="props.currentUserRole === 'Admin'">

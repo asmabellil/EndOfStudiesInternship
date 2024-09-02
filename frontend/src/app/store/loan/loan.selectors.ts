@@ -12,3 +12,8 @@ export const selectAllLoansList = createSelector(
     selectLoans,
     (loans) => loans.allLoans?.rows
 )
+
+export const selectAllLoansListCount = createSelector(
+    selectLoans,
+    (loans) => loans.allLoans?.count
+)
