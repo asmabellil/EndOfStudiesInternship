@@ -9,7 +9,6 @@ import http404 from '@components/404/404.router';
 import authRouter from '@components/authentification/auth.router';
 import cors from 'cors';
 import path from 'path';
-import './crons/pretsCron';
 
 const app: Application = express();
 

@@ -276,7 +276,11 @@ const generatePretPDF = async (pretId) => {
 
     const user = pret.User;
     const echances = pret.Echances;
-    const paymentStatus = pret.moneyStatus ? 'Fully Paid' : 'Not Fully Paid';
+
+    // Determine if the loan is fully paid
+    const lastEchance = echances[echances.length - 1];
+    const isFullyPaid = lastEchance && moment().isAfter(lastEchance.dateEchance);
+    const paymentStatus = isFullyPaid ? 'Fully Paid' : 'Not Fully Paid';
 
     // Create a new PDF document with margins
     const doc = new PDFDocument({ margin: 50 });
@@ -395,11 +399,10 @@ const generatePretPDF = async (pretId) => {
 
     return { status: 200, message: 'Doc generated', filePath };
   } catch (error) {
-    {
-      return { status: 400, message: error.message };
-    }
+    return { status: 400, message: error.message };
   }
 };
+
 
 
 export {
