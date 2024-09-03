@@ -40,3 +40,8 @@ export const selectUsersListRows = createSelector(
   selectUsersList,
   (usersList) => usersList?.rows
 )
+
+export const selectUsersListCount = createSelector(
+  selectUsersList,
+  (usersList) => usersList?.count
+)

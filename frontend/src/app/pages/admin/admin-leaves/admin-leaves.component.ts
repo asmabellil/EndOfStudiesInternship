@@ -24,8 +24,6 @@ export class AdminLeavesComponent implements OnInit {
   ngOnInit(): void {
     this.rejectionReason ='';
 
-    this.store.dispatch(getAllLeaves());
-
     this.leavesList$ = this.store.select(selectLeavesList).pipe(
       withLatestFrom(this.store.select(selectUsersListRows)),
       map(([leavesList, usersList]) => leavesList.map(leave => ({

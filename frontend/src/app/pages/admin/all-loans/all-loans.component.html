@@ -30,8 +30,6 @@
                             'user.firstName',
                             'user.lastName',
                             'loanDetails.pretRef',
-                            'loanDetails.dateObtention',
-                            'loanDetails.dateEcheance',
                             'loanDetails.montantPret',
                             'loanDetails.montantARemb',
                             'loanDetails.montant1ereRemb',
@@ -45,11 +43,20 @@
                         [showCurrentPageReport]="true"
                       >
                       <ng-template pTemplate="caption">
-                        <div class="d-flex align-items-center justify-content-end">
-                            <span class="p-input-icon-left">
-                              <i class="pi pi-search"></i>
-                              <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." class="mr-2"/>
-                            </span>
+                        <div class="d-flex align-items-center justify-content-between">
+                          <span>
+                            <div class="input-group mr-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                              </div>
+                              <input class="form-control datepicker" placeholder="Search by date..." ngbDatepicker #d1="ngbDatepicker" (click)="d1.toggle()" type="text" (ngModelChange)="setPointingsLists($event)" [(ngModel)]="searchDate" />
+                            </div>
+                          </span>
+
+                          <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." class="mr-2"/>
+                          </span>
                         </div>
                     </ng-template> 
                         <ng-template pTemplate="header">

@@ -9,6 +9,9 @@ import { catchError, filter, from, map, mergeMap, of, tap, withLatestFrom } from
 import { UserService } from "src/app/services/user.service";
 import { changeCheckInSelectedUser } from "../checkIn/check-in.actions";
 import * as UserActions from './user.actions';
+import * as LeavesActions from '../leaves/leaves.actions';
+import * as LoansActions from '../loan/loan.actions';
+import * as CheckInsActions from '../checkIn/check-in.actions';
 import { isUserConnected, selectUserRole } from "./user.selector";
 
 @Injectable()
@@ -37,6 +40,9 @@ export class UserEffects {
                 return from([
                   UserActions.connectUserSuccess({ token: connectResult.token, decodedToken: decodedToken, user: getUserRes.user }),
                   UserActions.getAllUsers(),
+                  LeavesActions.getAllLeaves(),
+                  LoansActions.getAllLoans(),
+                  CheckInsActions.getAllCheckIns(),
                   changeCheckInSelectedUser({ user: getUserRes.user }),
                 ])
               })
@@ -66,6 +72,9 @@ export class UserEffects {
               return from([
                 UserActions.connectUserSuccess({ token: connectResult.token, decodedToken: decodedToken, user: getUserRes.user }),
                 UserActions.getAllUsers(),
+                LeavesActions.getAllLeaves(),
+                LoansActions.getAllLoans(),
+                CheckInsActions.getAllCheckIns(),
                 changeCheckInSelectedUser({ user: getUserRes.user }),
               ])
             })

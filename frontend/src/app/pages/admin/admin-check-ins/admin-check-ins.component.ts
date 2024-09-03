@@ -11,7 +11,7 @@ import { AppState } from 'src/app/store/app.state';
 import { getAllCheckIns, changeCheckInSelectedUser, createCheckInForUser } from 'src/app/store/checkIn/check-in.actions';
 import { selectCheckInSelectedUser, selectCheckInsList } from 'src/app/store/checkIn/check-in.selectors';
 import { selectUserRole, selectUsersListRows } from 'src/app/store/user/user.selector';
-import { getUserFullName } from 'src/app/utils/utils';
+import { getUserFullName, isSameDay } from 'src/app/utils/utils';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -41,8 +41,6 @@ export class AdminCheckInsComponent implements OnInit {
     this.checkInTypes = Object.values(CheckInType);
     this.initializeCheckInForm();
 
-    this.store.dispatch(getAllCheckIns());
-
     this.usersList$ = this.store.select(selectUsersListRows);
     this.selectedUser$ = this.store.select(selectCheckInSelectedUser);
     this.currentUserRole$ = this.store.select(selectUserRole);
@@ -64,7 +62,7 @@ export class AdminCheckInsComponent implements OnInit {
         const result = this.groupCheckInsByDate(this.sortCheckInsByDates(checkIns));
 
         if(!!filterDate){
-          return result.filter(checkInsGroup => this.isSameDay(checkInsGroup.date, filterDate));
+          return result.filter(checkInsGroup => isSameDay(checkInsGroup.date, filterDate));
         }
 
         return result;
@@ -109,7 +107,7 @@ export class AdminCheckInsComponent implements OnInit {
 
   groupCheckInsByDate(checkInsList: CheckIn[]): {date: Date, checkIns: CheckIn[]}[] {
     return checkInsList.reduce((acc, checkIn) => {
-      const existingGroup = acc.find(group => this.isSameDay(group.date, checkIn.checkInDate));
+      const existingGroup = acc.find(group => isSameDay(group.date, checkIn.checkInDate));
   
       if (existingGroup) {
         existingGroup.checkIns.push(checkIn);
@@ -119,14 +117,6 @@ export class AdminCheckInsComponent implements OnInit {
   
       return acc;
     }, []);
-  }
-
-  isSameDay(date1: Date, date2: Date): boolean {
-    date1 = new Date(date1);
-    date2 = new Date(date2);
-    return date1.getFullYear() === date2.getFullYear() &&
-           date1.getMonth() === date2.getMonth() &&
-           date1.getDate() === date2.getDate();
   }
 
   sortCheckInsByDates(checkIns: CheckIn[]): CheckIn[] {

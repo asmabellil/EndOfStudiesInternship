@@ -1,367 +1,426 @@
-<div class="header down-side-border bg-dark-blue pb-8 pt-5 pt-md-8">
-  <div class="container-fluid">
-    <div class="header-body">
-      <!-- Card stats -->
-      <div class="row">
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Traffic</h5>
-                  <span class="h2 font-weight-bold mb-0">350,897</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                    <i class="fas fa-chart-bar"></i>
+<div *ngIf="{ 
+  numberOfLoansRequests: numberOfLoansRequests$ | async, 
+  numberOfUser: numberOfUser$ | async, 
+  numberOfLeavesRequests: numberOfLeavesRequests$ | async,
+  usersStatsNumber: usersStatsNumber$ | async,
+  leavesStatsNumber: leavesStatsNumber$ | async,
+  loansStatsNumber: loansStatsNumber$ | async
+} as globalProps">
+  <div class="header down-side-border bg-dark-blue pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body">
+        <!-- Card stats -->
+        <div class="row">
+          <div class="col-xl-3 col-lg-6">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">Users Number</h5>
+                    <span class="h3 font-weight-bold mb-0">{{ globalProps.numberOfUser }}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                      <i class="pi pi-users"></i>
+                    </div>
                   </div>
                 </div>
+                <p class="mt-3 mb-0 text-muted text-sm">
+                  <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 5%</span>
+                  <span class="text-nowrap">Since last month</span>
+                </p>
               </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                <span class="text-nowrap">Since last month</span>
-              </p>
             </div>
           </div>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">New users</h5>
-                  <span class="h2 font-weight-bold mb-0">2,356</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                    <i class="fas fa-chart-pie"></i>
+          <div class="col-xl-3 col-lg-6">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">Active/Inactive</h5>
+                    <span class="h4 font-weight-bold mb-0">{{ globalProps.usersStatsNumber.activeUsers }} Active - {{ globalProps.usersStatsNumber.InactiveUsers }} Inactive</span>
+                  </div>
+                  <div class="col-auto">
+                    <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                      <i class="pi pi-users"></i>
+                    </div>
                   </div>
                 </div>
+                <p class="mt-3 mb-0 text-muted text-sm">
+                  <span class="mr-2"> <strong>{{ (globalProps.usersStatsNumber.activeUsers / globalProps.numberOfUser) * 100 }}%</strong></span>
+                  <span class="text-nowrap">Active Users</span>
+                </p>
               </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 3.48%</span>
-                <span class="text-nowrap">Since last week</span>
-              </p>
             </div>
           </div>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Sales</h5>
-                  <span class="h2 font-weight-bold mb-0">924</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                    <i class="fas fa-users"></i>
+          <div class="col-xl-3 col-lg-6">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">Number By Role</h5>
+                    <span class="h5 font-weight-bold mb-0">{{ globalProps.usersStatsNumber.admins }} Admins - {{ globalProps.usersStatsNumber.employees }} Employees</span>
+                  </div>
+                  <div class="col-auto">
+                    <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                      <i class="pi pi-users"></i>
+                    </div>
                   </div>
                 </div>
+                <p class="mt-3 mb-0 text-muted text-sm">
+                  <span class="mr-2"> <strong>{{ (globalProps.usersStatsNumber.employees / globalProps.numberOfUser) * 100 }}%</strong></span>
+                  <span class="text-nowrap">Employees</span>
+                </p>
               </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <span class="text-warning mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
-                <span class="text-nowrap">Since yesterday</span>
-              </p>
             </div>
           </div>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
-                  <span class="h2 font-weight-bold mb-0">49,65%</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                    <i class="fas fa-percent"></i>
+          <div class="col-xl-3 col-lg-6">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">Number By Gender</h5>
+                    <span class="h4 font-weight-bold mb-0">{{ globalProps.usersStatsNumber.male }} Male - {{ globalProps.usersStatsNumber.female }} Female</span>
+                  </div>
+                  <div class="col-auto">
+                    <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                      <i class="pi pi-users"></i>
+                    </div>
                   </div>
                 </div>
+                <p class="mt-3 mb-0 text-muted text-sm">
+                  <span class="mr-2"> <strong>{{ (globalProps.usersStatsNumber.female / globalProps.numberOfUser) * 100 }}%</strong></span>
+                  <span class="text-nowrap">Female Employees</span>
+                </p>
               </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
-                <span class="text-nowrap">Since last month</span>
-              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<div class="container-fluid mt--7">
-  <div class="row">
-    <div class="col-xl-8 mb-5 mb-xl-0">
-      <div class="card bg-gradient-lighter shadow">
-        <div class="card-header bg-transparent">
-          <div class="row align-items-center">
-            <div class="col">
-              <h6 class="text-uppercase text-light ls-1 mb-1">Overview</h6>
-              <h2 class="text-white mb-0">Sales value</h2>
-            </div>
-            <div class="col">
-              <ul class="nav nav-pills justify-content-end">
-                <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales"  (click)="data=datasets[0];updateOptions()">
-                  <a href="javascript:void(0)" class="nav-link py-2 px-3" [ngClass]="{'active':clicked===true}" data-toggle="tab" (click)="clicked=true;clicked1=false">
-                    <span class="d-none d-md-block">Month</span>
-                    <span class="d-md-none">M</span>
-                  </a>
-                </li>
-                <li class="nav-item" data-toggle="chart" data-target="#chart-sales"  (click)="data=datasets[1];updateOptions()">
-                  <a href="javascript:void(0)" class="nav-link py-2 px-3" [ngClass]="{'active':clicked1===true}" data-toggle="tab" (click)="clicked=false;clicked1=true">
-                    <span class="d-none d-md-block">Week</span>
-                    <span class="d-md-none">W</span>
-                  </a>
-                </li>
-              </ul>
+  <div class="container-fluid mt--7">
+    <div class="row">
+      <div class="col-xl-12 mb-3" *ngIf="{ checkInsList: checkInsList$ | async } as props">
+        <div class="card shadow">
+          <div class="card-header bg-transparent">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="text-uppercase text-light ls-1 mb-1">Overview</h6>
+                <h2 class="text-muted text-uppercase text-sm mb-0">Average Working Hours Per Day</h2>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="card-body">
-          <!-- Chart -->
-          <div class="chart">
-            <!-- Chart wrapper -->
-            <canvas id="chart-sales" class="chart-canvas"></canvas>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Full Name</th>
+                  <th scope="col">Average Hours</th>
+                  <th scope="col">Unorganized Pointing Days</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of props.checkInsList">
+                  <th scope="row">
+                    {{ getUserFullName(item.user) }}
+                  </th>
+                  <td class="text-center">
+                    {{ !!item.averageWorkingHours ? item.averageWorkingHours.hours + 'h ' + item.averageWorkingHours.minutes + 'm' : '--' }}
+                  </td>
+                  <td class="text-center">
+                    {{ item.unorganized || '--'}}
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mr-2"> {{ getPourcentatgeOfHours(item.averageWorkingHours) }} </span>
+                      <div>
+                        <div class="progress">
+                          <div 
+                            class="progress-bar" 
+                            [ngClass]="getProgressBarClass(getPourcentatgeOfHours(item.averageWorkingHours))"
+                            role="progressbar" 
+                            aria-valuenow="getPourcentatgeOfHours(item.averageWorkingHours)" 
+                            aria-valuemin="0" 
+                            aria-valuemax="100" 
+                            [style.width.%]="getPourcentatgeOfHours(item.averageWorkingHours)"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <th scope="row">
+                    Facebook
+                  </th>
+                  <td>
+                    5,480
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mr-2">70%</span>
+                      <div>
+                        <div class="progress">
+                          <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    Google
+                  </th>
+                  <td>
+                    4,807
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mr-2">80%</span>
+                      <div>
+                        <div class="progress">
+                          <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    Instagram
+                  </th>
+                  <td>
+                    3,678
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mr-2">75%</span>
+                      <div>
+                        <div class="progress">
+                          <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    twitter
+                  </th>
+                  <td>
+                    2,645
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <span class="mr-2">30%</span>
+                      <div>
+                        <div class="progress">
+                          <div class="progress-bar bg-gradient-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr> -->
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-xl-4">
-      <div class="card shadow">
-        <div class="card-header bg-transparent">
-          <div class="row align-items-center">
-            <div class="col">
-              <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
-              <h2 class="mb-0">Total orders</h2>
+
+      <div class="col-xl-4 col-lg-6">
+        <div class="card card-stats mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Leaves Resuests</h5>
+                <span class="h2 font-weight-bold mb-0">{{ globalProps.numberOfLeavesRequests }}</span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                  <i class="pi pi-sign-out"></i>
+                </div>
+              </div>
             </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 3.48%</span>
+              <span class="text-nowrap">Since last month</span>
+            </p>
           </div>
         </div>
-        <div class="card-body">
-          <!-- Chart -->
-          <div class="chart">
-            <canvas id="chart-orders" class="chart-canvas"></canvas>
+      </div>
+      <div class="col-xl-4 col-lg-6">
+        <div class="card card-stats mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Leaves Over 10 days </h5>
+                <span class="h2 font-weight-bold mb-0">{{ globalProps.leavesStatsNumber.over10 }}</span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                  <i class="pi pi-sign-out"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 19%</span>
+              <span class="text-nowrap">Since last month</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-6">
+        <div class="card card-stats mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Leaves Under 10 days </h5>
+                <span class="h2 font-weight-bold mb-0">{{ globalProps.leavesStatsNumber.under10 }}</span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                  <i class="pi pi-sign-out"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 64%</span>
+              <span class="text-nowrap">Since last month</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-4 col-lg-6">
+        <div class="card card-stats mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Leaves Resuests Accepted</h5>
+                <span class="h2 font-weight-bold mb-0">{{ globalProps.leavesStatsNumber.accepted }}</span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                  <i class="pi pi-sign-out"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span class="mr-2"> <strong>{{ (globalProps.leavesStatsNumber.accepted / globalProps.numberOfLeavesRequests) * 100 | number:'1.0-2' }}%</strong></span>
+              <span class="text-nowrap">Accepted Requests</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-6">
+        <div class="card card-stats mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Leaves Resuests Pending</h5>
+                <span class="h2 font-weight-bold mb-0">{{ globalProps.leavesStatsNumber.pending }}</span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                  <i class="pi pi-sign-out"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span class="mr-2"> <strong>{{ (globalProps.leavesStatsNumber.pending / globalProps.numberOfLeavesRequests) * 100 | number:'1.0-2' }}%</strong></span>
+              <span class="text-nowrap">Pending Requests</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-6">
+        <div class="card card-stats mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Leaves Resuests Rejected</h5>
+                <span class="h2 font-weight-bold mb-0">{{ globalProps.leavesStatsNumber.rejected }}</span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                  <i class="pi pi-sign-out"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span class="mr-2"> <strong>{{ (globalProps.leavesStatsNumber.rejected / globalProps.numberOfLeavesRequests) * 100 | number:'1.0-2' }}%</strong></span>
+              <span class="text-nowrap">Rejected Requests</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-4 col-lg-6">
+        <div class="card card-stats mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Loans Requests</h5>
+                <span class="h2 font-weight-bold mb-0"> {{ globalProps.numberOfLoansRequests }} </span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                  <i class="pi pi-money-bill"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
+              <span class="text-nowrap">Since last year</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-6">
+        <div class="card card-stats mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Amount Of all Accepted Laons</h5>
+                <span class="h2 font-weight-bold mb-0"> {{ globalProps.loansStatsNumber.acceptedAmount }} TND </span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                  <i class="pi pi-money-bill"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 29%</span>
+              <span class="text-nowrap">Since last year</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-6">
+        <div class="card card-stats mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Benefits From Loans</h5>
+                <span class="h2 font-weight-bold mb-0"> {{ globalProps.loansStatsNumber.benefits }} TND </span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-default text-white rounded-circle shadow">
+                  <i class="pi pi-money-bill"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-muted text-sm">
+              <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 20%</span>
+              <span class="text-nowrap">Since last year</span>
+            </p>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row mt-5">
-    <div class="col-xl-8 mb-5 mb-xl-0">
-      <div class="card shadow">
-        <div class="card-header border-0">
-          <div class="row align-items-center">
-            <div class="col">
-              <h3 class="mb-0">Page visits</h3>
-            </div>
-            <div class="col text-right">
-              <a href="#!" class="btn btn-sm btn-primary">See all</a>
-            </div>
-          </div>
-        </div>
-        <div class="table-responsive">
-          <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">Page name</th>
-                <th scope="col">Visitors</th>
-                <th scope="col">Unique users</th>
-                <th scope="col">Bounce rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">
-                  /argon/
-                </th>
-                <td>
-                  4,569
-                </td>
-                <td>
-                  340
-                </td>
-                <td>
-                  <i class="fas fa-arrow-up text-success mr-3"></i> 46,53%
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  /argon/index.html
-                </th>
-                <td>
-                  3,985
-                </td>
-                <td>
-                  319
-                </td>
-                <td>
-                  <i class="fas fa-arrow-down text-warning mr-3"></i> 46,53%
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  /argon/charts.html
-                </th>
-                <td>
-                  3,513
-                </td>
-                <td>
-                  294
-                </td>
-                <td>
-                  <i class="fas fa-arrow-down text-warning mr-3"></i> 36,49%
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  /argon/tables.html
-                </th>
-                <td>
-                  2,050
-                </td>
-                <td>
-                  147
-                </td>
-                <td>
-                  <i class="fas fa-arrow-up text-success mr-3"></i> 50,87%
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  /argon/profile.html
-                </th>
-                <td>
-                  1,795
-                </td>
-                <td>
-                  190
-                </td>
-                <td>
-                  <i class="fas fa-arrow-down text-danger mr-3"></i> 46,53%
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-4">
-      <div class="card shadow">
-        <div class="card-header border-0">
-          <div class="row align-items-center">
-            <div class="col">
-              <h3 class="mb-0">Social traffic</h3>
-            </div>
-            <div class="col text-right">
-              <a href="#!" class="btn btn-sm btn-primary">See all</a>
-            </div>
-          </div>
-        </div>
-        <div class="table-responsive">
-          <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">Referral</th>
-                <th scope="col">Visitors</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">
-                  Facebook
-                </th>
-                <td>
-                  1,480
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mr-2">60%</span>
-                    <div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-dark" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  Facebook
-                </th>
-                <td>
-                  5,480
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mr-2">70%</span>
-                    <div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  Google
-                </th>
-                <td>
-                  4,807
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mr-2">80%</span>
-                    <div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  Instagram
-                </th>
-                <td>
-                  3,678
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mr-2">75%</span>
-                    <div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  twitter
-                </th>
-                <td>
-                  2,645
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mr-2">30%</span>
-                    <div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+  
 </div>

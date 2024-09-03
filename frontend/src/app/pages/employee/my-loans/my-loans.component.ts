@@ -3,11 +3,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbDate, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { Loan } from 'src/app/models/loan.model';
 import { AppState } from 'src/app/store/app.state';
 import { createLoan, deleteLoan, generateAndDownloadPDF, getLoansByUserId, updateLoan } from 'src/app/store/loan/loan.actions';
 import { selectLoansList } from 'src/app/store/loan/loan.selectors';
+import { isSameDay } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-my-loans',
@@ -20,6 +21,7 @@ export class MyLoansComponent implements OnInit {
   closeResult: string;
   loanIdToDelete: number;
   loanToUpdate: Loan;
+  searchDate: NgbDate;
 
   addingLoanForm: FormGroup;
   editingLoanForm: FormGroup;
@@ -29,8 +31,8 @@ export class MyLoansComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(getLoansByUserId());
-    
-    this.loansList$ = this.store.select(selectLoansList);
+
+    this.setPointingsLists(null);
 
     this.initializeAddingLoanForm();
   }
@@ -127,5 +129,19 @@ export class MyLoansComponent implements OnInit {
       dateObtention: new Date(formDateObtention.year, formDateObtention.month - 1, formDateObtention.day),
       dateEcheance: new Date(formDateEcheance.year, formDateEcheance.month - 1, formDateEcheance.day)
     }}));
+  }
+
+  setPointingsLists(searchDate: NgbDate){
+    const filterDate = !!searchDate ? new Date(searchDate.year, searchDate.month - 1, searchDate.day) : null;
+
+    this.loansList$ = this.store.select(selectLoansList).pipe(
+      map(loansList => {
+        if(!!filterDate){
+          return loansList.filter(loan => isSameDay(loan.dateObtention, filterDate) ||isSameDay(loan.dateEcheance, filterDate))
+        }
+
+        return loansList
+      })
+    );
   }
 }
